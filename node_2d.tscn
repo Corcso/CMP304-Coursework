@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=3 uid="uid://kcbcke8atc26"]
+
+[ext_resource type="Script" path="res://Fish.cs" id="1_tqwq1"]
+[ext_resource type="Script" path="res://FishGenerator.cs" id="1_vneun"]
+[ext_resource type="PackedScene" uid="uid://6h64lxx347x5" path="res://Nodes/Fish.tscn" id="3_yqfy1"]
+[ext_resource type="Script" path="res://GeneticAlgorithm.cs" id="4_k6qkw"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_aaufw"]
+radius = 1.0
+height = 2.0
+radial_segments = 4
+rings = 4
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Fish" type="Node2D" parent="."]
+visible = false
+script = ExtResource("1_tqwq1")
+length = 65
+upperMuscle = 32
+lowerMuscle = 78
+tailHeight = 22
+
+[node name="Polygon2D" type="Polygon2D" parent="Fish"]
+scale = Vector2(50, 50)
+script = ExtResource("1_vneun")
+
+[node name="BodySphere2" type="MeshInstance2D" parent="Fish/Polygon2D"]
+position = Vector2(6, 0)
+scale = Vector2(0.2, 0.2)
+mesh = SubResource("SphereMesh_aaufw")
+
+[node name="BodySphere" type="MeshInstance2D" parent="Fish/Polygon2D"]
+position = Vector2(3.2, 0)
+scale = Vector2(2, 2)
+mesh = SubResource("SphereMesh_aaufw")
+
+[node name="BodySphere5" type="MeshInstance2D" parent="Fish/Polygon2D"]
+position = Vector2(0.4, 0)
+scale = Vector2(0.2, 0.2)
+mesh = SubResource("SphereMesh_aaufw")
+
+[node name="BodySphere3" type="MeshInstance2D" parent="Fish/Polygon2D"]
+position = Vector2(-0.46, -1)
+scale = Vector2(0.5, 0.5)
+mesh = SubResource("SphereMesh_aaufw")
+
+[node name="BodySphere4" type="MeshInstance2D" parent="Fish/Polygon2D"]
+position = Vector2(-0.48, 1)
+scale = Vector2(0.5, 0.5)
+mesh = SubResource("SphereMesh_aaufw")
+
+[node name="Fish4" parent="." instance=ExtResource("3_yqfy1")]
+
+[node name="Genetic Algorithm" type="Node" parent="."]
+script = ExtResource("4_k6qkw")
+FishTemplate = ExtResource("3_yqfy1")
+
+[node name="Fish Tank" type="Node" parent="."]

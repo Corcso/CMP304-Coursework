@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://6h64lxx347x5"]
+
+[ext_resource type="Script" path="res://Fish.cs" id="1_cdgpm"]
+[ext_resource type="Script" path="res://FishGenerator.cs" id="2_5piny"]
+
+[node name="Fish" type="Node2D"]
+script = ExtResource("1_cdgpm")
+
+[node name="Polygon2D" type="Polygon2D" parent="."]
+scale = Vector2(10, 10)
+script = ExtResource("2_5piny")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 144.0
+offset_top = -178.0
+offset_right = 242.0
+offset_bottom = -155.0
+text = "0xFFAABBCC"
