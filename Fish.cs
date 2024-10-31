@@ -9,17 +9,26 @@ public partial class Fish : Node2D
     [Export] byte upperMuscle; // 0-255 (Remap 0.1-1.5)
     [Export] byte lowerMuscle; // 0-255 (Remap 0.1-1.5)
     [Export] byte tailHeight; // 0-255 (Remap 1-5)
+    [Export] byte leftMovement; // 0-255 (Remap 0-0.1)
+    [Export] byte rightMovement; // 0-255 (Remap 0-0.1)
 
-	float lengthActual;
+    float lengthActual;
 	float upperMuscleActual;
 	float lowerMuscleActual;
 	float tailHeightActual;
+	float leftMovementActual;
+	float rightMovementActual;
 
 	float flapSpeed; // (3^strength)/tailHeight
 	float dragConstant; // based on biggest muscle
 
 	float timeAlive;
 	float lastFlapAngle;
+
+    RayCast2D leftEye;
+    RayCast2D rightEye;
+
+    Label text;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -30,33 +39,46 @@ public partial class Fish : Node2D
         LoadRandom();
         GrowFish();
 
+        leftEye = GetNode<RayCast2D>("Left Eye");
+        rightEye = GetNode<RayCast2D>("Right Eye");
+
+        GetNode<Area2D>("./Death Zone").BodyEntered += (Node2D b) => { QueueFree(); };
+
+        
     }
 
     public void LoadRandom() { 
         RandomNumberGenerator rng = new RandomNumberGenerator();
 
-        LoadGene(rng.Randi());
+        LoadGene((ulong)rng.Randi() << 32 | (ulong)rng.Randi());
     }
 
     /// <summary>
     /// Loads a gene from its binary footprint
     /// </summary>
     /// <param name="gene">32 bit gene</param>
-    public void LoadGene(uint gene) {
+    public void LoadGene(ulong gene) {
         // Store attributes
-        length = (byte)((gene & 0xFF000000) >> 24);
-        upperMuscle = (byte)((gene & 0x00FF0000) >> 16);
-        lowerMuscle = (byte)((gene & 0x0000FF00) >> 8);
-        tailHeight = (byte)((gene & 0x000000FF) >> 0);
+        leftMovement =      (byte)((gene & 0x0000FF0000000000) >> 40);
+        rightMovement =     (byte)((gene & 0x000000FF00000000) >> 32);
+        length =            (byte)((gene & 0x00000000FF000000) >> 24);
+        upperMuscle =       (byte)((gene & 0x0000000000FF0000) >> 16);
+        lowerMuscle =       (byte)((gene & 0x000000000000FF00) >> 8);
+        tailHeight =        (byte)((gene & 0x00000000000000FF) >> 0);
+
+        text = GetNode<Label>("./Text");
+        text.Text = (gene & 0x0000FFFFFFFFFFFF).ToString("X");
+
     }
 
-    public void LoadValues(byte length, byte upperMuscle, byte lowerMuscle, byte tailHeight) {
-        // Store attributes
-        this.length = length;
-        this.upperMuscle = upperMuscle;
-        this.lowerMuscle = lowerMuscle;
-        this.tailHeight = tailHeight;
-    }
+    // Needs updated
+    //public void LoadValues(byte length, byte upperMuscle, byte lowerMuscle, byte tailHeight) {
+    //    // Store attributes
+    //    this.length = length;
+    //    this.upperMuscle = upperMuscle;
+    //    this.lowerMuscle = lowerMuscle;
+    //    this.tailHeight = tailHeight;
+    //}
 
     /// <summary>
     /// Takes the values assigned to length, upper & lower muscle and tail height and turns them into float values and creates the polygon.
@@ -64,6 +86,8 @@ public partial class Fish : Node2D
     /// </summary>
     private void GrowFish() { 
         // First remap genes
+        leftMovementActual = (float)leftMovement / 255 * 0.3f;
+        rightMovementActual = (float)rightMovement / 255 * 0.3f;
         lengthActual = ((float)length / 255) * (10 - 4) + 4;
         upperMuscleActual = ((float)upperMuscle / 255) * (1.5f - 0.1f) + 0.1f;
         lowerMuscleActual = ((float)lowerMuscle / 255) * (1.5f - 0.1f) + 0.1f;
@@ -104,13 +128,27 @@ public partial class Fish : Node2D
         GetChild<FishGenerator>(0).GenerateFishPolygon();
 
         // Debug output
-        GD.Print(Name + " I am speed: " + flapSpeed.ToString() + " and power " + tailHeight.ToString());
+        GD.Print(Name + " I am speed: " + flapSpeed.ToString() + " and power " + tailHeight.ToString() + "L" + leftMovementActual.ToString() + "R" + rightMovementActual.ToString());
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		timeAlive += (float)delta;
+
+
+        // Process turning
+        float leftDistance = 1000;
+        float rightDistance = 1000;
+        if (leftEye.IsColliding()) leftDistance = GlobalPosition.DistanceSquaredTo(leftEye.GetCollisionPoint()) / 1000.0f;
+        if (rightEye.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
+        //if (rightEye.IsColliding()) GD.Print(GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f);
+
+        float turnThisFrame = (Mathf.Clamp((-rightDistance * rightMovementActual) + 1.0f, 0, 1) - Mathf.Clamp((-leftDistance * leftMovementActual) + 1.0f, 0, 1)) * (float)delta * 0.7f;
+
+        Rotate(turnThisFrame);
+        //GD.Print(turnThisFrame);
+
+        timeAlive += (float)delta;
 
 		float currentFlapAngle = Mathf.Sin(timeAlive * flapSpeed * 6) * tailHeight;
 		float flapThisFrame = Mathf.Abs(currentFlapAngle - lastFlapAngle);
@@ -118,8 +156,10 @@ public partial class Fish : Node2D
 		float toMove = Mathf.Clamp((flapThisFrame * (float)delta * 50) - (dragConstant * 2.0f), 0, 100000);
 
 
-        Position = new Vector2(Position.X + toMove, Position.Y) ;
+        Position += toMove * GlobalTransform.BasisXform(new Vector2(1, 0));
 
 		lastFlapAngle = currentFlapAngle;
+
+
 	}
 }

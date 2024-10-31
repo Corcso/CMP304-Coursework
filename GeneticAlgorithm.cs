@@ -16,11 +16,11 @@ public partial class GeneticAlgorithm : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		thisGeneration = new Fish[50];
+		thisGeneration = new Fish[500];
 		rng = new RandomNumberGenerator();
 
 		// Summon initial generation
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 500; i++)
 		{
 			thisGeneration[i] = FishTemplate.Instantiate<Fish>();
 			thisGeneration[i].LoadRandom();
