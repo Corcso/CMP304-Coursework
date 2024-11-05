@@ -16,6 +16,7 @@ radius = 146.086
 [node name="Genetic Algorithm" type="Node" parent="."]
 script = ExtResource("4_k6qkw")
 FishTemplate = ExtResource("3_yqfy1")
+generationLifetime = 10.0
 
 [node name="Fish Tank" type="Node" parent="."]
 

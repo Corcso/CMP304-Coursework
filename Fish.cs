@@ -30,6 +30,9 @@ public partial class Fish : Node2D
 
     Label text;
 
+    // Public for test
+    public bool alive;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
@@ -42,9 +45,12 @@ public partial class Fish : Node2D
         leftEye = GetNode<RayCast2D>("Left Eye");
         rightEye = GetNode<RayCast2D>("Right Eye");
 
-        GetNode<Area2D>("./Death Zone").BodyEntered += (Node2D b) => { QueueFree(); };
+        GetNode<Area2D>("./Death Zone").BodyEntered += (Node2D b) => {
+            alive = false;
+            Hide();
+        };
 
-        
+        alive = true;
     }
 
     public void LoadRandom() { 
@@ -128,13 +134,14 @@ public partial class Fish : Node2D
         GetChild<FishGenerator>(0).GenerateFishPolygon();
 
         // Debug output
-        GD.Print(Name + " I am speed: " + flapSpeed.ToString() + " and power " + tailHeight.ToString() + "L" + leftMovementActual.ToString() + "R" + rightMovementActual.ToString());
+        //GD.Print(Name + " I am speed: " + flapSpeed.ToString() + " and power " + tailHeight.ToString() + "L" + leftMovementActual.ToString() + "R" + rightMovementActual.ToString());
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-
+        // If dead dont move
+        if (!alive) return;
 
         // Process turning
         float leftDistance = 1000;
