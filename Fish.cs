@@ -4,13 +4,14 @@ using System;
 public partial class Fish : Node2D
 {
 
-	// Fish Parameters
+    // Fish Parameters
+    ulong myGene;
 	[Export] byte length; // 0-255 (Remap 4-10)
     [Export] byte upperMuscle; // 0-255 (Remap 0.1-1.5)
     [Export] byte lowerMuscle; // 0-255 (Remap 0.1-1.5)
     [Export] byte tailHeight; // 0-255 (Remap 1-5)
-    [Export] byte leftMovement; // 0-255 (Remap 0-0.1)
-    [Export] byte rightMovement; // 0-255 (Remap 0-0.1)
+    [Export] byte leftMovement; // 0-255 (Remap -0.15-0.15)
+    [Export] byte rightMovement; // 0-255 (Remap -0.15-0.15)
 
     float lengthActual;
 	float upperMuscleActual;
@@ -40,7 +41,7 @@ public partial class Fish : Node2D
         lastFlapAngle = 0;
 
         LoadRandom();
-        GrowFish();
+        
 
         leftEye = GetNode<RayCast2D>("Left Eye");
         rightEye = GetNode<RayCast2D>("Right Eye");
@@ -75,6 +76,29 @@ public partial class Fish : Node2D
         text = GetNode<Label>("./Text");
         text.Text = (gene & 0x0000FFFFFFFFFFFF).ToString("X");
 
+        myGene = gene;
+
+        GrowFish();
+
+    }
+
+    public void Reset() {
+        myGene = 0;
+        leftMovement = 0;
+        rightMovement = 0;
+        length = 0;
+        upperMuscle = 0;
+        lowerMuscle = 0;
+        tailHeight = 0;
+        timeAlive = 0;
+        lastFlapAngle = 0;
+        foreach (Node bodySphere in GetChild<Node>(0).GetChildren()) { 
+            bodySphere.QueueFree();
+        }
+    }
+
+    public ulong GetGene() {
+        return myGene;
     }
 
     // Needs updated
@@ -92,8 +116,8 @@ public partial class Fish : Node2D
     /// </summary>
     private void GrowFish() { 
         // First remap genes
-        leftMovementActual = (float)leftMovement / 255 * 0.3f;
-        rightMovementActual = (float)rightMovement / 255 * 0.3f;
+        leftMovementActual = (float)leftMovement / 255 * 0.3f - 0.15f;
+        rightMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
         lengthActual = ((float)length / 255) * (10 - 4) + 4;
         upperMuscleActual = ((float)upperMuscle / 255) * (1.5f - 0.1f) + 0.1f;
         lowerMuscleActual = ((float)lowerMuscle / 255) * (1.5f - 0.1f) + 0.1f;
