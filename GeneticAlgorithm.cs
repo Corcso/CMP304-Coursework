@@ -20,10 +20,14 @@ public partial class GeneticAlgorithm : Node
 
 	double timeElapsed = 0;
 
+	[Export] Label FPS;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
-		Engine.TimeScale = 1;
+		DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
+		Engine.PhysicsTicksPerSecond = 300;
+		Engine.TimeScale = 3;
 
 		thisGeneration = new Fish[400];
 		toCreateNextGeneration = new ulong[20];
@@ -63,6 +67,8 @@ public partial class GeneticAlgorithm : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		FPS.Text = "FPS: " + Engine.GetFramesPerSecond();
+
 		timeElapsed += delta;
 		if (timeElapsed > generationLifetime) {
             NewGeneration();

@@ -95,6 +95,8 @@ public partial class Fish : Node2D
         foreach (Node bodySphere in GetChild<Node>(0).GetChildren()) { 
             bodySphere.QueueFree();
         }
+
+        Rotation = 0;
     }
 
     public ulong GetGene() {
@@ -179,7 +181,7 @@ public partial class Fish : Node2D
         Rotate(turnThisFrame);
         //GD.Print(turnThisFrame);
 
-        timeAlive += (float)delta;
+        
 
 		float currentFlapAngle = Mathf.Sin(timeAlive * flapSpeed * 6) * tailHeight;
 		float flapThisFrame = Mathf.Abs(currentFlapAngle - lastFlapAngle);
@@ -190,7 +192,7 @@ public partial class Fish : Node2D
         Position += toMove * GlobalTransform.BasisXform(new Vector2(1, 0));
 
 		lastFlapAngle = currentFlapAngle;
+        timeAlive += (float)delta;
 
-
-	}
+    }
 }
