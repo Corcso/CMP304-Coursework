@@ -20,6 +20,7 @@ font_size = 56
 script = ExtResource("4_k6qkw")
 FishTemplate = ExtResource("3_yqfy1")
 generationLifetime = 10.0
+mutationPercentage = 0.5
 FPS = NodePath("../Control/FPS LABEL")
 
 [node name="Fish Tank" type="Node" parent="."]
@@ -203,6 +204,114 @@ scale = Vector2(0.47, 0.47)
 shape = SubResource("CircleShape2D_r2ej5")
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D17"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D18" type="StaticBody2D" parent="."]
+position = Vector2(161, -193)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D18"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D18"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D19" type="StaticBody2D" parent="."]
+position = Vector2(304, -264)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D19"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D19"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D20" type="StaticBody2D" parent="."]
+position = Vector2(466, -271)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D20"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D20"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D21" type="StaticBody2D" parent="."]
+position = Vector2(596, -214)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D21"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D21"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D22" type="StaticBody2D" parent="."]
+position = Vector2(383, -270)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D22"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D22"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D23" type="StaticBody2D" parent="."]
+position = Vector2(635, -123)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D23"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D23"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D24" type="StaticBody2D" parent="."]
+position = Vector2(691, -23)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D24"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D24"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D25" type="StaticBody2D" parent="."]
+position = Vector2(422, 105)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D25"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D25"]
+position = Vector2(1.5, -3)
+scale = Vector2(2.03906, 2.14063)
+texture = ExtResource("3_rohkf")
+
+[node name="StaticBody2D26" type="StaticBody2D" parent="."]
+position = Vector2(422, 105)
+scale = Vector2(0.47, 0.47)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D26"]
+shape = SubResource("CircleShape2D_r2ej5")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D26"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")

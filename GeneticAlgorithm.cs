@@ -13,10 +13,11 @@ public partial class GeneticAlgorithm : Node
 	RandomNumberGenerator rng;
 
 	[Export] float generationLifetime;
+	[Export] float mutationPercentage;
 
 	Func<Fish, float> FitnessFunction;
     Func<ulong, ulong, ulong> RecombinationFunction;
-	Func<Fish, Fish> MutationFunction;
+	Func<ulong, ulong> MutationFunction;
 
 	double timeElapsed = 0;
 
@@ -54,13 +55,21 @@ public partial class GeneticAlgorithm : Node
             //ulong parentGene1 = parent1.GetGene();
 			//ulong parentGene2 = parent2.GetGene();
 
-			int swapAfter = 48 - rng.RandiRange(0, 48);
+			int swapAfter = 64 - rng.RandiRange(0, 64);
 			ulong mask = 0xFFFFFFFFFFFFFFFF >> swapAfter;
 
 			ulong childGene = (parent1 & mask) | (parent2 & ~mask);
 			return childGene;
 			//child.LoadGene(childGene);
             //GetNode<Node>("../Fish Tank").AddChild(child);
+		};
+
+		MutationFunction = (ulong unMutatedGene) =>
+		{
+			int swapBit = rng.RandiRange(0, 63);
+			ulong swapMask = (ulong)0x0000000000000001 << swapBit;
+
+			return unMutatedGene ^ swapMask;
 		};
     }
 
@@ -108,7 +117,10 @@ public partial class GeneticAlgorithm : Node
 					thisGeneration[i * 20 + j].LoadGene(toCreateNextGeneration[i]);
 				}
 				else {
-					thisGeneration[i * 20 + j].LoadGene(RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j]));
+					ulong childGene = RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j]);
+					float mutationRoll = rng.Randf();
+                    if(mutationRoll < mutationPercentage) thisGeneration[i * 20 + j].LoadGene(MutationFunction(childGene));
+                    else thisGeneration[i * 20 + j].LoadGene(childGene);
                     //RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j], thisGeneration[i * 20 + j]);
                 }
 			}
