@@ -180,6 +180,7 @@ public partial class Fish : Node2D
 	{
         // If dead dont move
         if (!alive) return;
+        delta = 1.0f / Engine.PhysicsTicksPerSecond;
 
         // Process turning
         float leftDistance = 1000;
@@ -197,7 +198,7 @@ public partial class Fish : Node2D
 
         
 
-		float currentFlapAngle = Mathf.Sin(timeAlive * flapSpeed * 6) * tailHeight;
+		float currentFlapAngle = Mathf.Sin(timeAlive + flapSpeed * 6) * tailHeight;
 		float flapThisFrame = Mathf.Abs(currentFlapAngle - lastFlapAngle);
 
 		float toMove = Mathf.Clamp((flapThisFrame * (float)delta * 50) - (dragConstant * 2.0f), 0, 100000);
