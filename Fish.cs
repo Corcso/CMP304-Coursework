@@ -176,7 +176,7 @@ public partial class Fish : Node2D
         if (rightEye.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
         //if (rightEye.IsColliding()) GD.Print(GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f);
 
-        float turnThisFrame = (Mathf.Clamp((-rightDistance * rightMovementActual) + 1.0f, 0, 1) - Mathf.Clamp((-leftDistance * leftMovementActual) + 1.0f, 0, 1)) * (float)delta * 0.7f;
+        float turnThisFrame = (Mathf.Clamp((-rightDistance * rightMovementActual) + 0.0f, 0, 1) - Mathf.Clamp((-leftDistance * leftMovementActual) + 0.0f, 0, 1)) * (float)delta * 0.7f;
 
         Rotate(turnThisFrame);
         //GD.Print(turnThisFrame);
