@@ -12,6 +12,8 @@ public partial class Fish : Node2D
     [Export] byte tailHeight; // 0-255 (Remap 1-5)
     [Export] byte leftMovement; // 0-255 (Remap -0.15-0.15)
     [Export] byte rightMovement; // 0-255 (Remap -0.15-0.15)
+    [Export] byte closeLeftMovement; // 0-255 (Remap -0.15-0.15)
+    [Export] byte closeRightMovement; // 0-255 (Remap -0.15-0.15)
 
     float lengthActual;
 	float upperMuscleActual;
@@ -19,6 +21,8 @@ public partial class Fish : Node2D
 	float tailHeightActual;
 	float leftMovementActual;
 	float rightMovementActual;
+	float closeLeftMovementActual;
+	float closeRightMovementActual;
 
 	float flapSpeed; // (3^strength)/tailHeight
 	float dragConstant; // based on biggest muscle
@@ -27,7 +31,9 @@ public partial class Fish : Node2D
 	float lastFlapAngle;
 
     RayCast2D leftEye;
+    RayCast2D closeLeftEye;
     RayCast2D rightEye;
+    RayCast2D closeRightEye;
 
     Label text;
 
@@ -44,7 +50,9 @@ public partial class Fish : Node2D
         
 
         leftEye = GetNode<RayCast2D>("Left Eye");
+        closeLeftEye = GetNode<RayCast2D>("Close Left Eye");
         rightEye = GetNode<RayCast2D>("Right Eye");
+        closeRightEye = GetNode<RayCast2D>("Close Right Eye");
 
         GetNode<Area2D>("./Death Zone").BodyEntered += (Node2D b) => {
             alive = false;
@@ -66,6 +74,8 @@ public partial class Fish : Node2D
     /// <param name="gene">32 bit gene</param>
     public void LoadGene(ulong gene) {
         // Store attributes
+        closeLeftMovement =      (byte)((gene & 0xFF00000000000000) >> 56);
+        closeRightMovement =      (byte)((gene & 0x00FF000000000000) >> 48);
         leftMovement =      (byte)((gene & 0x0000FF0000000000) >> 40);
         rightMovement =     (byte)((gene & 0x000000FF00000000) >> 32);
         length =            (byte)((gene & 0x00000000FF000000) >> 24);
@@ -74,7 +84,7 @@ public partial class Fish : Node2D
         tailHeight =        (byte)((gene & 0x00000000000000FF) >> 0);
 
         text = GetNode<Label>("./Text");
-        text.Text = (gene & 0x0000FFFFFFFFFFFF).ToString("X");
+        text.Text = (gene & 0xFFFFFFFFFFFFFFFF).ToString("X");
 
         myGene = gene;
 
@@ -118,7 +128,9 @@ public partial class Fish : Node2D
     /// </summary>
     private void GrowFish() { 
         // First remap genes
-        leftMovementActual = (float)leftMovement / 255 * 0.3f - 0.15f;
+        closeLeftMovementActual = (float)leftMovement / 255 * 0.3f - 0.15f;
+        closeRightMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
+        leftMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
         rightMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
         lengthActual = ((float)length / 255) * (10 - 4) + 4;
         upperMuscleActual = ((float)upperMuscle / 255) * (1.5f - 0.1f) + 0.1f;
@@ -174,6 +186,8 @@ public partial class Fish : Node2D
         float rightDistance = 1000;
         if (leftEye.IsColliding()) leftDistance = GlobalPosition.DistanceSquaredTo(leftEye.GetCollisionPoint()) / 1000.0f;
         if (rightEye.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
+        //if (close.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
+        ///if (rightEye.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
         //if (rightEye.IsColliding()) GD.Print(GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f);
 
         float turnThisFrame = (Mathf.Clamp((-rightDistance * rightMovementActual) + 0.0f, 0, 1) - Mathf.Clamp((-leftDistance * leftMovementActual) + 0.0f, 0, 1)) * (float)delta * 0.7f;
