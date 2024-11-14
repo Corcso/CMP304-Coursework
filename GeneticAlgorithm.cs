@@ -12,6 +12,7 @@ public partial class GeneticAlgorithm : Node
 
 	RandomNumberGenerator rng;
 
+	[Export] int squareGenerationSize;
 	[Export] float mutationPercentage;
 
 	Func<Fish, float> FitnessFunction;
@@ -31,12 +32,12 @@ public partial class GeneticAlgorithm : Node
 		//DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
 		Engine.PhysicsTicksPerSecond = 60;
 
-		thisGeneration = new Fish[64];
-		toCreateNextGeneration = new ulong[8];
+		thisGeneration = new Fish[squareGenerationSize * squareGenerationSize];
+		toCreateNextGeneration = new ulong[squareGenerationSize];
 		rng = new RandomNumberGenerator();
 
 		// Summon initial generation
-		for (int i = 0; i < 64; i++)
+		for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
 		{
 			thisGeneration[i] = FishTemplate.Instantiate<Fish>();
 			thisGeneration[i].LoadRandom();
@@ -98,13 +99,13 @@ public partial class GeneticAlgorithm : Node
 			return (FitnessFunction(f1) > FitnessFunction(f2)) ? 1 : ((FitnessFunction(f1) == FitnessFunction(f2)) ? 0 : -1); 
 		}));
 
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < squareGenerationSize; i++)
         {
-			toCreateNextGeneration[i] = thisGeneration[i + 56].GetGene();
+			toCreateNextGeneration[i] = thisGeneration[i + (squareGenerationSize * squareGenerationSize) - squareGenerationSize].GetGene();
 			//GD.Print(toCreateNextGeneration[i].Position.X);
         }
 
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
 			thisGeneration[i].alive = false;
 			thisGeneration[i].Reset();
@@ -113,19 +114,19 @@ public partial class GeneticAlgorithm : Node
 
 	public void CreateNewPopulation()
 	{
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < squareGenerationSize; i++)
 		{
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < squareGenerationSize; j++)
             {
 				if (i == j)
 				{
-					thisGeneration[i * 8 + j].LoadGene(toCreateNextGeneration[i]);
+					thisGeneration[i * squareGenerationSize + j].LoadGene(toCreateNextGeneration[i]);
 				}
 				else {
 					ulong childGene = RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j]);
 					float mutationRoll = rng.Randf();
-                    if(mutationRoll < mutationPercentage) thisGeneration[i * 8 + j].LoadGene(MutationFunction(childGene));
-                    else thisGeneration[i * 8 + j].LoadGene(childGene);
+                    if(mutationRoll < mutationPercentage) thisGeneration[i * squareGenerationSize + j].LoadGene(MutationFunction(childGene));
+                    else thisGeneration[i * squareGenerationSize + j].LoadGene(childGene);
                     //RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j], thisGeneration[i * 20 + j]);
                 }
 			}
@@ -133,7 +134,7 @@ public partial class GeneticAlgorithm : Node
     }
 
 	public void SpawnNewPopulation() {
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
             thisGeneration[i].Position = new Vector2(-500, rng.RandiRange(-300, 300));
 			thisGeneration[i].alive = true;
