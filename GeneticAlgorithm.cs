@@ -8,7 +8,7 @@ public partial class GeneticAlgorithm : Node
 
 	Fish[] thisGeneration;
     ulong[] toCreateNextGeneration;
-	int generation;
+	public int generation = 1;
 
 	RandomNumberGenerator rng;
 
@@ -22,12 +22,14 @@ public partial class GeneticAlgorithm : Node
 
     [Export] int renderEveryXTicks = 60;
     [Export] public int maxTicks = 5000;
-	int ticksThisGeneration = 0;
+	public int ticksThisGeneration = 0;
 
 
-	enum State { PRE_SIM, SIMULATING, PAUSED};
+	public enum State { PRE_SIM, SIMULATING, PAUSED};
 	State currentState;
 
+	public float bestFitness;
+	public float avgFitness;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -35,8 +37,7 @@ public partial class GeneticAlgorithm : Node
 		//DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
 		Engine.PhysicsTicksPerSecond = 60;
 
-		thisGeneration = new Fish[squareGenerationSize * squareGenerationSize];
-		toCreateNextGeneration = new ulong[squareGenerationSize];
+		
 		rng = new RandomNumberGenerator();
 
 		// Set current state
@@ -78,6 +79,7 @@ public partial class GeneticAlgorithm : Node
 		if (ticksThisGeneration > maxTicks) {
             NewGeneration();
             ticksThisGeneration = 0;
+			generation++;
 		}
 
 		if(ticksThisGeneration % renderEveryXTicks == 0) { RenderingServer.RenderLoopEnabled = true; }
@@ -93,6 +95,15 @@ public partial class GeneticAlgorithm : Node
 		Array.Sort(thisGeneration, Comparer<Fish>.Create((Fish f1, Fish f2) => { 
 			return (FitnessFunction(f1) > FitnessFunction(f2)) ? 1 : ((FitnessFunction(f1) == FitnessFunction(f2)) ? 0 : -1); 
 		}));
+
+		// Get best and average fitness
+		bestFitness = FitnessFunction(thisGeneration[(squareGenerationSize * squareGenerationSize) - 1]);
+		float totalFitness = 0;
+        for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
+        {
+			totalFitness += FitnessFunction(thisGeneration[i]);
+        }
+		avgFitness = totalFitness / (squareGenerationSize * squareGenerationSize);
 
         for (int i = 0; i < squareGenerationSize; i++)
         {
@@ -153,20 +164,38 @@ public partial class GeneticAlgorithm : Node
 	{
         currentState = State.SIMULATING;
 
+        thisGeneration = new Fish[squareGenerationSize * squareGenerationSize];
+        toCreateNextGeneration = new ulong[squareGenerationSize];
+
         // Summon initial generation
         for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
             thisGeneration[i] = FishTemplate.Instantiate<Fish>();
             thisGeneration[i].LoadRandom();
             thisGeneration[i].Position = new Vector2(-500, rng.RandiRange(-300, 300));
+            thisGeneration[i].GA = this;
             GetNode<Node>("../Fish Tank").AddChild(thisGeneration[i]);
         }
+
+        generation = 0;
+        ticksThisGeneration = 0;
+
+       
     }
 
 	public void Pause() 
 	{
 		currentState = State.PAUSED;
-	}
+
+        RenderingServer.RenderLoopEnabled = true;
+    }
+
+    public void Unpause()
+    {
+        currentState = State.SIMULATING;
+
+        RenderingServer.RenderLoopEnabled = false;
+    }
 
     public void End()
     {
@@ -176,7 +205,16 @@ public partial class GeneticAlgorithm : Node
         for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
 			thisGeneration[i].QueueFree();
+			thisGeneration[i] = null;
         }
+
+        RenderingServer.RenderLoopEnabled = true;
+
+        
     }
+
+	public State GetCurrentState() {
+		return currentState;
+	}
 
 }

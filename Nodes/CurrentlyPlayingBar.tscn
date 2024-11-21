@@ -55,16 +55,16 @@ text = "Avg. Fitness: "
 
 [node name="Pause Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 3.0
-offset_top = 611.0
-offset_right = 145.0
-offset_bottom = 642.0
+offset_left = 151.0
+offset_top = 614.0
+offset_right = 293.0
+offset_bottom = 645.0
 text = "Pause Simulation"
 
 [node name="Stop Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 150.0
-offset_top = 611.0
-offset_right = 292.0
-offset_bottom = 642.0
+offset_left = 5.0
+offset_top = 614.0
+offset_right = 147.0
+offset_bottom = 645.0
 text = "Stop Simulation"

@@ -40,6 +40,9 @@ public partial class Fish : Node2D
     // Public for test
     public bool alive;
 
+    // Reference to GA to check if paused and whatnot (Will be set by the GA on fish creation)
+    public GeneticAlgorithm GA;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
@@ -180,6 +183,8 @@ public partial class Fish : Node2D
 	{
         // If dead dont move
         if (!alive) return;
+        // If paused also dont move. 
+        if (GA.GetCurrentState() == GeneticAlgorithm.State.PAUSED) return;
         delta = 1.0f / Engine.PhysicsTicksPerSecond;
 
         // Process turning

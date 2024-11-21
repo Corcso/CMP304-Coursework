@@ -4,6 +4,10 @@ using Range = Godot.Range;
 
 public partial class UI : Control
 {
+    // Pages
+    Control settingsPage;
+    Control simulationPage;
+
     // GUI ELEMENTS
     Label currentTick_Label;
     Label currentGeneration_Label;
@@ -25,6 +29,10 @@ public partial class UI : Control
         // Get GA
         GA = GetNode<GeneticAlgorithm>("../Genetic Algorithm");
 
+        // Set pages
+        settingsPage = GetNode<Control>("./Settings Menu");
+        simulationPage = GetNode<Control>("./Currently Playing UI");
+
         // Setup output
         currentTick_Label = GetNode<Label>("./Currently Playing UI/Panel/Ticks");
         currentGeneration_Label = GetNode<Label>("./Currently Playing UI/Panel/Generation");
@@ -33,10 +41,30 @@ public partial class UI : Control
         squareGenerationToActualSize_Label = GetNode<Label>("./Settings Menu/Panel/Actual Generation Size");
 
         // Setup signals (for input)
-        GetNode<Button>("./Currently Playing UI/Pause Button").Pressed += () => { GA.Pause(); };
-        GetNode<Button>("./Currently Playing UI/Stop Button").Pressed += () => { GA.End(); };
+        GetNode<Button>("./Currently Playing UI/Pause Button").Pressed += () => {
+            if (GA.GetCurrentState() != GeneticAlgorithm.State.PAUSED)
+            {
+                GA.Pause();
+                GetNode<Button>("./Currently Playing UI/Pause Button").Text = "Resume Simulation";
+            }
+            else {
+                GA.Unpause();
+                GetNode<Button>("./Currently Playing UI/Pause Button").Text = "Pause Simulation";
+            }
+            
+        
+        };
+        GetNode<Button>("./Currently Playing UI/Stop Button").Pressed += () => { 
+            GA.End();
+            settingsPage.Show();
+            simulationPage.Hide();
+        };
 
-        GetNode<Button>("./Settings Menu/Panel/Start Button").Pressed += () => { GA.Start(); };
+        GetNode<Button>("./Settings Menu/Panel/Start Button").Pressed += () => { 
+            GA.Start();
+            settingsPage.Hide();
+            simulationPage.Show();
+        };
 
         GetNode<Range>("./Settings Menu/Panel/Square Generation Size").ValueChanged += (double value) => {
             GA.squareGenerationSize = (int)value;
@@ -64,5 +92,9 @@ public partial class UI : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+        currentTick_Label.Text = "Tick: " + GA.ticksThisGeneration.ToString();
+        currentGeneration_Label.Text = "Gen: " + GA.generation.ToString();
+        lastBestFitness_Label.Text = "Best Fitness: " + GA.bestFitness.ToString();
+        lastAverageFitness_Label.Text = "Avg. Fitness: " + GA.avgFitness.ToString();
 	}
 }
