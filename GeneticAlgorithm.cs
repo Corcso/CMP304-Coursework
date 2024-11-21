@@ -12,8 +12,8 @@ public partial class GeneticAlgorithm : Node
 
 	RandomNumberGenerator rng;
 
-	[Export] int squareGenerationSize;
-	[Export] float mutationPercentage;
+	[Export] public int squareGenerationSize;
+	[Export] public float mutationPercentage;
 
 	Func<Fish, float> FitnessFunction;
     Func<ulong, ulong, ulong> RecombinationFunction;
@@ -21,10 +21,13 @@ public partial class GeneticAlgorithm : Node
 
 
     [Export] int renderEveryXTicks = 60;
-    [Export] int maxTicks = 5000;
+    [Export] public int maxTicks = 5000;
 	int ticksThisGeneration = 0;
 
-	[Export] Label FPS;
+
+	enum State { PRE_SIM, SIMULATING, PAUSED};
+	State currentState;
+
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -36,15 +39,8 @@ public partial class GeneticAlgorithm : Node
 		toCreateNextGeneration = new ulong[squareGenerationSize];
 		rng = new RandomNumberGenerator();
 
-		// Summon initial generation
-		for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
-		{
-			thisGeneration[i] = FishTemplate.Instantiate<Fish>();
-			thisGeneration[i].LoadRandom();
-			thisGeneration[i].Position = new Vector2(-500, rng.RandiRange(-300, 300));
-			GetNode<Node>("../Fish Tank").AddChild(thisGeneration[i]);
-		}
-
+		// Set current state
+		currentState = State.PRE_SIM;
 
 		// Define fitness function
 		FitnessFunction = (Fish toEvaluate) =>
@@ -78,8 +74,7 @@ public partial class GeneticAlgorithm : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		FPS.Text = "Tick "+ ticksThisGeneration.ToString();
-
+		if(currentState != State.SIMULATING) return;
 		if (ticksThisGeneration > maxTicks) {
             NewGeneration();
             ticksThisGeneration = 0;
@@ -154,5 +149,34 @@ public partial class GeneticAlgorithm : Node
 
     }
 
+	public void Start()
+	{
+        currentState = State.SIMULATING;
+
+        // Summon initial generation
+        for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
+        {
+            thisGeneration[i] = FishTemplate.Instantiate<Fish>();
+            thisGeneration[i].LoadRandom();
+            thisGeneration[i].Position = new Vector2(-500, rng.RandiRange(-300, 300));
+            GetNode<Node>("../Fish Tank").AddChild(thisGeneration[i]);
+        }
+    }
+
+	public void Pause() 
+	{
+		currentState = State.PAUSED;
+	}
+
+    public void End()
+    {
+        currentState = State.PRE_SIM;
+
+        // Delete current generation
+        for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
+        {
+			thisGeneration[i].QueueFree();
+        }
+    }
 
 }

@@ -1,15 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://kcbcke8atc26"]
+[gd_scene load_steps=8 format=3 uid="uid://kcbcke8atc26"]
 
 [ext_resource type="Texture2D" uid="uid://birtx5jgoidfi" path="res://icon.svg" id="3_rohkf"]
 [ext_resource type="PackedScene" uid="uid://6h64lxx347x5" path="res://Nodes/Fish.tscn" id="3_yqfy1"]
 [ext_resource type="Script" path="res://GeneticAlgorithm.cs" id="4_k6qkw"]
+[ext_resource type="Script" path="res://UI.cs" id="4_lk78s"]
+[ext_resource type="PackedScene" uid="uid://cs63you3jneoc" path="res://Nodes/CurrentlyPlayingBar.tscn" id="4_ps2ds"]
+[ext_resource type="PackedScene" uid="uid://gxfs72y6132p" path="res://Nodes/GASettingsMenu.tscn" id="5_nt7ne"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r2ej5"]
 radius = 146.086
-
-[sub_resource type="LabelSettings" id="LabelSettings_5fqis"]
-font_size = 56
-font_color = Color(1, 0, 0, 1)
 
 [node name="Node2D" type="Node2D"]
 
@@ -17,334 +16,332 @@ font_color = Color(1, 0, 0, 1)
 
 [node name="Fish4" parent="." instance=ExtResource("3_yqfy1")]
 
-[node name="Genetic Algorithm" type="Node" parent="." node_paths=PackedStringArray("FPS")]
+[node name="Genetic Algorithm" type="Node" parent="."]
 script = ExtResource("4_k6qkw")
 FishTemplate = ExtResource("3_yqfy1")
-squareGenerationSize = 21
-mutationPercentage = 0.5
+squareGenerationSize = 8
+mutationPercentage = 0.01
 renderEveryXTicks = 100
-FPS = NodePath("../Control/FPS LABEL")
 
 [node name="Fish Tank" type="Node" parent="."]
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
+[node name="Rocks" type="Node2D" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-131, 463)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D5" type="StaticBody2D" parent="."]
+[node name="StaticBody2D5" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-407, 465)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D5"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D5"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D5"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D5"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D6" type="StaticBody2D" parent="."]
+[node name="StaticBody2D6" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-437, -449)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D6"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D6"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D6"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D6"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D7" type="StaticBody2D" parent="."]
+[node name="StaticBody2D7" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-133, -457)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D7"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D7"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D7"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D7"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D8" type="StaticBody2D" parent="."]
+[node name="StaticBody2D8" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-724, -191)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D8"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D8"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D8"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D8"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D10" type="StaticBody2D" parent="."]
+[node name="StaticBody2D10" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-650, -391)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D10"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D10"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D10"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D10"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D11" type="StaticBody2D" parent="."]
+[node name="StaticBody2D11" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-661, 400)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D11"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D11"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D11"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D11"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D12" type="StaticBody2D" parent="."]
+[node name="StaticBody2D12" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-706, -40)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D12"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D12"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D12"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D12"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D9" type="StaticBody2D" parent="."]
+[node name="StaticBody2D9" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-730, 159)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D9"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D9"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D9"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D9"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+[node name="StaticBody2D2" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-87, -177)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D2"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D2"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D2"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D13" type="StaticBody2D" parent="."]
+[node name="StaticBody2D13" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-146, -266)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D13"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D13"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D13"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D13"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D14" type="StaticBody2D" parent="."]
+[node name="StaticBody2D14" type="StaticBody2D" parent="Rocks"]
 position = Vector2(-27, -96)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D14"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D14"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D14"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D14"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D15" type="StaticBody2D" parent="."]
+[node name="StaticBody2D15" type="StaticBody2D" parent="Rocks"]
 position = Vector2(147, 189)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D15"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D15"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D15"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D15"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D16" type="StaticBody2D" parent="."]
+[node name="StaticBody2D16" type="StaticBody2D" parent="Rocks"]
 position = Vector2(264, 110)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D16"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D16"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D16"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D16"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+[node name="StaticBody2D3" type="StaticBody2D" parent="Rocks"]
 position = Vector2(91, -63)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D3"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D3"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D3"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D17" type="StaticBody2D" parent="."]
+[node name="StaticBody2D17" type="StaticBody2D" parent="Rocks"]
 position = Vector2(347, 20)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D17"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D17"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D17"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D17"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D18" type="StaticBody2D" parent="."]
+[node name="StaticBody2D18" type="StaticBody2D" parent="Rocks"]
 position = Vector2(161, -193)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D18"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D18"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D18"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D18"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D19" type="StaticBody2D" parent="."]
+[node name="StaticBody2D19" type="StaticBody2D" parent="Rocks"]
 position = Vector2(304, -264)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D19"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D19"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D19"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D19"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D20" type="StaticBody2D" parent="."]
+[node name="StaticBody2D20" type="StaticBody2D" parent="Rocks"]
 position = Vector2(466, -271)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D20"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D20"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D20"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D20"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D21" type="StaticBody2D" parent="."]
+[node name="StaticBody2D21" type="StaticBody2D" parent="Rocks"]
 position = Vector2(596, -214)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D21"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D21"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D21"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D21"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D22" type="StaticBody2D" parent="."]
+[node name="StaticBody2D22" type="StaticBody2D" parent="Rocks"]
 position = Vector2(383, -270)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D22"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D22"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D22"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D22"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D23" type="StaticBody2D" parent="."]
+[node name="StaticBody2D23" type="StaticBody2D" parent="Rocks"]
 position = Vector2(635, -123)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D23"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D23"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D23"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D23"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D24" type="StaticBody2D" parent="."]
+[node name="StaticBody2D24" type="StaticBody2D" parent="Rocks"]
 position = Vector2(691, -23)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D24"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D24"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D24"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D24"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D25" type="StaticBody2D" parent="."]
+[node name="StaticBody2D25" type="StaticBody2D" parent="Rocks"]
 position = Vector2(422, 105)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D25"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D25"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D25"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D25"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D26" type="StaticBody2D" parent="."]
+[node name="StaticBody2D26" type="StaticBody2D" parent="Rocks"]
 position = Vector2(422, 105)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D26"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D26"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D26"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D26"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="StaticBody2D4" type="StaticBody2D" parent="."]
+[node name="StaticBody2D4" type="StaticBody2D" parent="Rocks"]
 position = Vector2(29, 235)
 scale = Vector2(0.47, 0.47)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rocks/StaticBody2D4"]
 shape = SubResource("CircleShape2D_r2ej5")
 
-[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D4"]
+[node name="Sprite2D" type="Sprite2D" parent="Rocks/StaticBody2D4"]
 position = Vector2(1.5, -3)
 scale = Vector2(2.03906, 2.14063)
 texture = ExtResource("3_rohkf")
 
-[node name="Control" type="Control" parent="."]
+[node name="UI" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 0
 offset_left = -576.0
 offset_top = -324.0
 offset_right = 576.0
 offset_bottom = 324.0
-grow_horizontal = 2
-grow_vertical = 2
+script = ExtResource("4_lk78s")
 
-[node name="FPS LABEL" type="Label" parent="Control"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "FPS:"
-label_settings = SubResource("LabelSettings_5fqis")
+[node name="Currently Playing UI" parent="UI" instance=ExtResource("4_ps2ds")]
+visible = false
+layout_mode = 1
+
+[node name="Settings Menu" parent="UI" instance=ExtResource("5_nt7ne")]
+layout_mode = 1

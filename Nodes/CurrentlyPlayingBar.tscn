@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cs63you3jneoc"]
+
+[node name="Currently Playing UI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 40.0
+
+[node name="Ticks" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 1.0
+offset_right = 141.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 28
+text = "Tick: XXXX"
+
+[node name="Generation" type="Label" parent="Panel"]
+offset_left = 177.0
+offset_top = 1.0
+offset_right = 314.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 28
+text = "Gen: XX"
+
+[node name="Last Best Fitness" type="Label" parent="Panel"]
+offset_left = 624.0
+offset_right = 801.0
+offset_bottom = 39.0
+theme_override_font_sizes/font_size = 28
+text = "Best Fitness: "
+
+[node name="Last Generation Seperator" type="Label" parent="Panel"]
+offset_left = 362.0
+offset_top = 1.0
+offset_right = 553.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 28
+text = "Last Gen Stats"
+
+[node name="Last Mean Fitness" type="Label" parent="Panel"]
+offset_left = 883.0
+offset_top = 1.0
+offset_right = 1060.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 28
+text = "Avg. Fitness: "
+
+[node name="Pause Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 611.0
+offset_right = 145.0
+offset_bottom = 642.0
+text = "Pause Simulation"
+
+[node name="Stop Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 611.0
+offset_right = 292.0
+offset_bottom = 642.0
+text = "Stop Simulation"
