@@ -1,0 +1,67 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmggdr5nh1n8c"]
+
+[ext_resource type="FontFile" uid="uid://d3y7qdi6si2un" path="res://consola.ttf" id="1_vvyg3"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_f1stp"]
+font_size = 22
+
+[node name="Single Fish View" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 914.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = -20.0
+offset_top = 184.0
+offset_right = 232.0
+offset_bottom = 492.0
+
+[node name="Fish Name" type="Label" parent="Panel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = 93.0
+offset_bottom = 34.0
+text = "Fish : XX"
+label_settings = SubResource("LabelSettings_f1stp")
+
+[node name="Fish Chromosome" type="RichTextLabel" parent="Panel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 39.0
+offset_right = 254.0
+offset_bottom = 102.0
+theme_override_fonts/normal_font = ExtResource("1_vvyg3")
+theme_override_font_sizes/normal_font_size = 27
+bbcode_enabled = true
+text = "XXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXX"
+scroll_active = false
+
+[node name="Fish Genes" type="RichTextLabel" parent="Panel"]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 92.0
+offset_right = 245.0
+offset_bottom = 267.0
+bbcode_enabled = true
+text = "Length (4-10): XX
+Upper Muscle (0.1-1.5): X.XX
+Lower Muscle (0.1-1.5): X.XX
+Tail Height (1-5): X
+L. Turn Fac. (-0.15-0.15): X.XX
+R. Turn Fac. (-0.15-0.15): X.XX"
+scroll_active = false
+
+[node name="Close Window Button" type="Button" parent="Panel"]
+layout_mode = 0
+offset_left = 218.0
+offset_top = 2.0
+offset_right = 249.0
+offset_bottom = 33.0
+text = "X"

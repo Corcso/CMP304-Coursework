@@ -6,7 +6,7 @@ public partial class GeneticAlgorithm : Node
 {
 	[Export] PackedScene FishTemplate;
 
-	Fish[] thisGeneration;
+	public Fish[] thisGeneration;
     ulong[] toCreateNextGeneration;
 	public int generation = 1;
 

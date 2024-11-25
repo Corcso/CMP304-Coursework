@@ -7,6 +7,7 @@ public partial class UI : Control
     // Pages
     Control settingsPage;
     Control simulationPage;
+    Control fishViewPage;
 
     // GUI ELEMENTS
     Label currentTick_Label;
@@ -15,6 +16,10 @@ public partial class UI : Control
     Label lastAverageFitness_Label;
 
     Label squareGenerationToActualSize_Label;
+
+    Label fishNumber_Label;
+    RichTextLabel fishBarcode_Label;
+    RichTextLabel fishGenes_Label;
 
     // Need a reference to mutation rate slider and box as they are conencted
     Range mutationRateSlider;
@@ -39,6 +44,9 @@ public partial class UI : Control
         lastBestFitness_Label = GetNode<Label>("./Currently Playing UI/Panel/Last Best Fitness");
         lastAverageFitness_Label = GetNode<Label>("./Currently Playing UI/Panel/Last Mean Fitness");
         squareGenerationToActualSize_Label = GetNode<Label>("./Settings Menu/Panel/Actual Generation Size");
+        fishNumber_Label = GetNode<Label>("./Single Fish View/Panel/Fish Name");
+        fishBarcode_Label = GetNode<RichTextLabel>("./Single Fish View/Panel/Fish Chromosome");
+        fishGenes_Label = GetNode<RichTextLabel>("./Single Fish View/Panel/Fish Genes");
 
         // Setup signals (for input)
         GetNode<Button>("./Currently Playing UI/Pause Button").Pressed += () => {
@@ -96,5 +104,12 @@ public partial class UI : Control
         currentGeneration_Label.Text = "Gen: " + GA.generation.ToString();
         lastBestFitness_Label.Text = "Best Fitness: " + GA.bestFitness.ToString();
         lastAverageFitness_Label.Text = "Avg. Fitness: " + GA.avgFitness.ToString();
+
+        if (GA.GetCurrentState() == GeneticAlgorithm.State.SIMULATING) {
+            fishNumber_Label.Text = "Fish: 0";
+            fishBarcode_Label.Text = GA.thisGeneration[0].GetChromosomeBarcode();
+            GD.Print(GA.thisGeneration[0].GetGeneDescription());
+            fishGenes_Label.Text = GA.thisGeneration[0].GetGeneDescription();
+        }
 	}
 }

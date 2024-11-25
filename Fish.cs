@@ -1,4 +1,4 @@
-using Godot;
+﻿using Godot;
 using System;
 
 public partial class Fish : Node2D
@@ -214,5 +214,46 @@ public partial class Fish : Node2D
 		lastFlapAngle = currentFlapAngle;
         timeAlive += (float)delta;
 
+    }
+    
+    private string[] geneColours = { "red", "green", "blue", "yellow", "purple", "white", "orange", "pink" };
+
+    public string GetChromosomeBarcode() {
+        string toReturn = "        ";
+        // For each Gene
+        for (int i = 16; i < 64; i += 8) { 
+            byte gene = (byte)((myGene & (0xFF00000000000000 >> i)) >> (56-i));
+            toReturn += "[color="+ geneColours[i/8]+"]";
+            // For each pair of bytes
+            for (int bp = 0; bp < 8; bp += 2) { 
+            switch ((byte)((gene & (0b11000000 >> bp)) >> (6 - bp)))
+                {
+                    case 0b00:
+                        toReturn += " ";
+                        break;
+                    case 0b01:
+                        toReturn += "▐";
+                        break;
+                    case 0b10:
+                        toReturn += "▌";
+                        break;
+                    case 0b11:
+                        toReturn += "█";
+                        break;
+                }
+            }
+            if (i == 24) toReturn += "\n";
+            toReturn += "[/color]";
+        }
+        return toReturn;
+    }
+
+    public string GetGeneDescription() {
+        return "[color=" + geneColours[4] + "]Length (4-10): " + MathF.Round(lengthActual, 3) +"[/color]\n" +
+            "[color=" + geneColours[5] + "]Upper Muscle (0.1-1.5): " + MathF.Round(upperMuscleActual, 3) + "[/color]\n" +
+            "[color=" + geneColours[6] + "]Lower Muscle (0.1-1.5): " + MathF.Round(lowerMuscleActual, 3) + "[/color]\n" +
+            "[color=" + geneColours[7] + "]Tail Height (1-5): " + MathF.Round(tailHeightActual, 3) + "[/color]\n" +
+            "[color=" + geneColours[3] + "]L. Turn Fac. (-0.15-0.15): " + MathF.Round(leftMovementActual, 3) + "[/color]\n" +
+            "[color=" + geneColours[2] + "]R. Turn Fac. (-0.15-0.15): " + MathF.Round(rightMovementActual, 3) + "[/color]\n";
     }
 }

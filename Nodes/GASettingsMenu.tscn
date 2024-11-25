@@ -37,6 +37,7 @@ min_value = 1.0
 value = 8.0
 
 [node name="Actual Generation Size" type="Label" parent="Panel"]
+layout_mode = 0
 offset_left = 11.0
 offset_top = 71.0
 offset_right = 191.0
@@ -45,6 +46,7 @@ text = "64 Fish"
 label_settings = SubResource("LabelSettings_rji7p")
 
 [node name="Lifetime Label" type="Label" parent="Panel"]
+layout_mode = 0
 offset_left = 11.0
 offset_top = 97.0
 offset_right = 191.0
@@ -53,6 +55,7 @@ text = "Ticks Per Generation"
 label_settings = SubResource("LabelSettings_rji7p")
 
 [node name="Lifetime" type="SpinBox" parent="Panel"]
+layout_mode = 0
 offset_left = 10.0
 offset_top = 124.0
 offset_right = 229.0
@@ -63,6 +66,7 @@ step = 500.0
 value = 5000.0
 
 [node name="Mutation Rate Label" type="Label" parent="Panel"]
+layout_mode = 0
 offset_left = 11.0
 offset_top = 166.0
 offset_right = 191.0
@@ -83,6 +87,7 @@ value = 1.0
 tick_count = 5
 
 [node name="Mutation Rate Box" type="SpinBox" parent="Panel"]
+layout_mode = 0
 offset_left = 9.0
 offset_top = 235.0
 offset_right = 233.0
@@ -91,6 +96,7 @@ step = 0.01
 value = 1.0
 
 [node name="Recombination Function Label" type="Label" parent="Panel"]
+layout_mode = 0
 offset_left = 9.0
 offset_top = 274.0
 offset_right = 198.0
@@ -112,6 +118,7 @@ popup/item_1/text = "Double Point Crossover"
 popup/item_1/id = 1
 
 [node name="Mutation Function Label" type="Label" parent="Panel"]
+layout_mode = 0
 offset_left = 7.0
 offset_top = 339.0
 offset_right = 196.0
@@ -135,6 +142,7 @@ popup/item_2/text = "Flip 4 Random Bits"
 popup/item_2/id = 2
 
 [node name="Fitness Function Label" type="Label" parent="Panel"]
+layout_mode = 0
 offset_left = 6.0
 offset_top = 406.0
 offset_right = 195.0

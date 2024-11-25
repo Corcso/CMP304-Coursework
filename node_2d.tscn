@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://kcbcke8atc26"]
+[gd_scene load_steps=9 format=3 uid="uid://kcbcke8atc26"]
 
 [ext_resource type="Texture2D" uid="uid://birtx5jgoidfi" path="res://icon.svg" id="3_rohkf"]
 [ext_resource type="PackedScene" uid="uid://6h64lxx347x5" path="res://Nodes/Fish.tscn" id="3_yqfy1"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://UI.cs" id="4_lk78s"]
 [ext_resource type="PackedScene" uid="uid://cs63you3jneoc" path="res://Nodes/CurrentlyPlayingBar.tscn" id="4_ps2ds"]
 [ext_resource type="PackedScene" uid="uid://gxfs72y6132p" path="res://Nodes/GASettingsMenu.tscn" id="5_nt7ne"]
+[ext_resource type="PackedScene" uid="uid://bmggdr5nh1n8c" path="res://Nodes/FishView.tscn" id="7_8ti01"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r2ej5"]
 radius = 146.086
@@ -343,4 +344,7 @@ visible = false
 layout_mode = 1
 
 [node name="Settings Menu" parent="UI" instance=ExtResource("5_nt7ne")]
+layout_mode = 1
+
+[node name="Single Fish View" parent="UI" instance=ExtResource("7_8ti01")]
 layout_mode = 1
