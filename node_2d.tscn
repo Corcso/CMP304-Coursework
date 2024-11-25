@@ -347,4 +347,5 @@ layout_mode = 1
 layout_mode = 1
 
 [node name="Single Fish View" parent="UI" instance=ExtResource("7_8ti01")]
+visible = false
 layout_mode = 1

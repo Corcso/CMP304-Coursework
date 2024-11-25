@@ -37,7 +37,8 @@ public partial class FishGenerator : Polygon2D
             spheres[0].Position + new Vector2(0, spheres[0].Scale.Y)
         };
 
-        Polygon = points;
+        this.Polygon = null;
+        this.Polygon = points;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

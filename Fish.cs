@@ -49,7 +49,7 @@ public partial class Fish : Node2D
         timeAlive = 0;
         lastFlapAngle = 0;
 
-        LoadRandom();
+        GD.Print("Ready!");
         
 
         leftEye = GetNode<RayCast2D>("Left Eye");
@@ -90,9 +90,8 @@ public partial class Fish : Node2D
         text.Text = (gene & 0xFFFFFFFFFFFFFFFF).ToString("X");
 
         myGene = gene;
-
+        GD.Print("leading!");
         GrowFish();
-
     }
 
     public void Reset() {
@@ -106,24 +105,15 @@ public partial class Fish : Node2D
         timeAlive = 0;
         lastFlapAngle = 0;
         foreach (Node bodySphere in GetChild<Node>(0).GetChildren()) { 
-            bodySphere.QueueFree();
+            bodySphere.Free();
         }
-
+        GD.Print("reset!");
         Rotation = 0;
     }
 
     public ulong GetGene() {
         return myGene;
     }
-
-    // Needs updated
-    //public void LoadValues(byte length, byte upperMuscle, byte lowerMuscle, byte tailHeight) {
-    //    // Store attributes
-    //    this.length = length;
-    //    this.upperMuscle = upperMuscle;
-    //    this.lowerMuscle = lowerMuscle;
-    //    this.tailHeight = tailHeight;
-    //}
 
     /// <summary>
     /// Takes the values assigned to length, upper & lower muscle and tail height and turns them into float values and creates the polygon.
@@ -133,7 +123,7 @@ public partial class Fish : Node2D
         // First remap genes
         closeLeftMovementActual = (float)leftMovement / 255 * 0.3f - 0.15f;
         closeRightMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
-        leftMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
+        leftMovementActual = (float)leftMovement / 255 * 0.3f - 0.15f;
         rightMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
         lengthActual = ((float)length / 255) * (10 - 4) + 4;
         upperMuscleActual = ((float)upperMuscle / 255) * (1.5f - 0.1f) + 0.1f;
