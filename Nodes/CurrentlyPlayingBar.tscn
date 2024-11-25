@@ -5,6 +5,7 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_bottom = -551.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -59,16 +60,16 @@ text = "Avg. Fitness: "
 
 [node name="Pause Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 151.0
-offset_top = 614.0
-offset_right = 293.0
-offset_bottom = 645.0
+offset_left = 148.0
+offset_top = 44.0
+offset_right = 290.0
+offset_bottom = 75.0
 text = "Pause Simulation"
 
 [node name="Stop Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 5.0
-offset_top = 614.0
-offset_right = 147.0
-offset_bottom = 645.0
+offset_left = 2.0
+offset_top = 44.0
+offset_right = 144.0
+offset_bottom = 75.0
 text = "Stop Simulation"

@@ -58,7 +58,7 @@ L. Turn Fac. (-0.15-0.15): X.XX
 R. Turn Fac. (-0.15-0.15): X.XX"
 scroll_active = false
 
-[node name="Close Window Button" type="Button" parent="Panel"]
+[node name="Close Button" type="Button" parent="Panel"]
 layout_mode = 0
 offset_left = 218.0
 offset_top = 2.0

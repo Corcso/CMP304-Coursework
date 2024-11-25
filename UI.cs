@@ -25,6 +25,9 @@ public partial class UI : Control
     Range mutationRateSlider;
     Range mutationRateBox;
 
+    // Current fish that the fish overview box is on
+    Fish fishOnOverview;
+
     // Reference to the GeneticAlgorithm so paramaters can be set. 
     GeneticAlgorithm GA;
 
@@ -37,6 +40,7 @@ public partial class UI : Control
         // Set pages
         settingsPage = GetNode<Control>("./Settings Menu");
         simulationPage = GetNode<Control>("./Currently Playing UI");
+        fishViewPage = GetNode<Control>("./Single Fish View");
 
         // Setup output
         currentTick_Label = GetNode<Label>("./Currently Playing UI/Panel/Ticks");
@@ -74,6 +78,11 @@ public partial class UI : Control
             simulationPage.Show();
         };
 
+        GetNode<Button>("./Single Fish View/Panel/Close Button").Pressed += () => {
+            fishOnOverview = null;
+            fishViewPage.Hide();
+        };
+
         GetNode<Range>("./Settings Menu/Panel/Square Generation Size").ValueChanged += (double value) => {
             GA.squareGenerationSize = (int)value;
             squareGenerationToActualSize_Label.Text = ((int)(value * value)).ToString() + " Fish";
@@ -102,14 +111,16 @@ public partial class UI : Control
 	{
         currentTick_Label.Text = "Tick: " + GA.ticksThisGeneration.ToString();
         currentGeneration_Label.Text = "Gen: " + GA.generation.ToString();
-        lastBestFitness_Label.Text = "Best Fitness: " + GA.bestFitness.ToString();
-        lastAverageFitness_Label.Text = "Avg. Fitness: " + GA.avgFitness.ToString();
-
-        if (GA.GetCurrentState() == GeneticAlgorithm.State.SIMULATING) {
-            fishNumber_Label.Text = "Fish: 0";
-            fishBarcode_Label.Text = GA.thisGeneration[0].GetChromosomeBarcode();
-            GD.Print(GA.thisGeneration[0].GetGeneDescription());
-            fishGenes_Label.Text = GA.thisGeneration[0].GetGeneDescription();
-        }
+        lastBestFitness_Label.Text = "Best Fitness: " + MathF.Round(GA.bestFitness, 3).ToString();
+        lastAverageFitness_Label.Text = "Avg. Fitness: " + MathF.Round(GA.avgFitness, 3).ToString();
 	}
+
+    public void ShowFishOverview(Fish fishToShow)
+    {
+        fishOnOverview = fishToShow;
+        fishViewPage.Show();
+        fishNumber_Label.Text = "Fish: " + Array.IndexOf(GA.thisGeneration, fishOnOverview).ToString() + " Gen: " + GA.generation.ToString();
+        fishBarcode_Label.Text = fishOnOverview.GetChromosomeBarcode();
+        fishGenes_Label.Text = fishOnOverview.GetGeneDescription();
+    }
 }

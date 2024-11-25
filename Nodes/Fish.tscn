@@ -1,9 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://6h64lxx347x5"]
+[gd_scene load_steps=5 format=3 uid="uid://6h64lxx347x5"]
 
 [ext_resource type="Script" path="res://Fish.cs" id="1_cdgpm"]
 [ext_resource type="Script" path="res://FishGenerator.cs" id="2_5piny"]
+[ext_resource type="Script" path="res://Nodes/ClickableFishPart.cs" id="3_k28ei"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_b8j0p"]
+radius = 25.0
 
 [node name="Fish" type="Node2D"]
 script = ExtResource("1_cdgpm")
@@ -32,6 +34,7 @@ target_position = Vector2(200, 60)
 target_position = Vector2(220, 30)
 
 [node name="Death Zone" type="Area2D" parent="."]
+script = ExtResource("3_k28ei")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Death Zone"]
 shape = SubResource("CircleShape2D_b8j0p")
