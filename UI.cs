@@ -92,6 +92,23 @@ public partial class UI : Control
             GA.maxTicks = (int)value;
         };
 
+        GetNode<OptionButton>("./Settings Menu/Panel/Recombination Function").ItemSelected += (long index) => {
+            switch (index) {
+                case 0: // Single Point Crossover
+                    GA.RecombinationFunction = GA.SinglePointCrossover;
+                    break;
+                case 1: // Double Point Crossover
+                    GA.RecombinationFunction = GA.DoublePointCrossover;
+                    break;
+                case 2: // Chromosome Midpoint
+                    GA.RecombinationFunction = GA.ChromosomeMidpoint;
+                    break;
+                case 3: // Gene Midpoints
+                    GA.RecombinationFunction = GA.GeneMidpoints;
+                    break;
+            };    
+        };
+
         mutationRateSlider = GetNode<Range>("./Settings Menu/Panel/Mutation Rate Slider");
         mutationRateBox = GetNode<Range>("./Settings Menu/Panel/Mutation Rate Box");
         mutationRateSlider.ValueChanged += (double value) => {
