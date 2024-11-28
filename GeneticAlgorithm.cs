@@ -52,6 +52,12 @@ public partial class GeneticAlgorithm : Node
 	public float bestFitness;
 	public float avgFitness;
 
+    // Rock Spawning
+    [Export] PackedScene rockScene;
+    [Export] int rockRadius;
+    [Export] float rockDensity;
+
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
@@ -324,6 +330,7 @@ public partial class GeneticAlgorithm : Node
         //thisGeneration = new Fish[400];
         CreateNewPopulation();
 		SpawnNewPopulation();
+        SummonNewRocks();
         OutputStatistics();
     }
 
@@ -346,8 +353,9 @@ public partial class GeneticAlgorithm : Node
 
         generation = 0;
         ticksThisGeneration = 0;
+        SummonNewRocks();
 
-       
+
     }
 
 	public void Pause() 
@@ -397,6 +405,18 @@ public partial class GeneticAlgorithm : Node
             generation.ToString() + "," + bestFitness.ToString() + "," + avgFitness.ToString() + "," + 
             mutationPercentage.ToString() + "," +mutationFunctionName + "," + recombinationFunctionName + "," + fitnessFunctionName + "," + squareGenerationSize * squareGenerationSize + "," + maxTicks.ToString());
         file.Close();
+    }
+
+    private void SummonNewRocks() {
+        foreach (Node rock in GetNode<Node>("../Rocks").GetChildren())
+        {
+            rock.Free();
+        }
+        for (int i = 0; i < rockDensity * rockRadius; ++i) {
+            Node2D newRock = rockScene.Instantiate<Node2D>();
+            GetNode<Node>("../Rocks").AddChild(newRock);
+            newRock.Position = new Vector2 (rng.RandiRange(-rockRadius, rockRadius), rng.RandiRange(-rockRadius, rockRadius));
+        }
     }
 
 }

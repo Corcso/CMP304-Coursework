@@ -90,7 +90,6 @@ public partial class Fish : Node2D
         text.Text = (gene & 0xFFFFFFFFFFFFFFFF).ToString("X");
 
         myGene = gene;
-        GD.Print("leading!");
         GrowFish();
     }
 
@@ -107,7 +106,6 @@ public partial class Fish : Node2D
         foreach (Node bodySphere in GetChild<Node>(0).GetChildren()) { 
             bodySphere.Free();
         }
-        GD.Print("reset!");
         Rotation = 0;
     }
 
