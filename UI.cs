@@ -109,6 +109,30 @@ public partial class UI : Control
             };    
         };
 
+        GetNode<OptionButton>("./Settings Menu/Panel/Mutation Function").ItemSelected += (long index) => {
+            switch (index)
+            {
+                case 0: // Flip 1 Random Bit
+                    GA.MutationFunction = GA.SingleBitFlip;
+                    break;
+                case 1: // Flip 2 Random Bits
+                    GA.MutationFunction = GA.DoubleBitFlip;
+                    break;
+                case 2: // Flip 4 Random Bits
+                    GA.MutationFunction = GA.QuadBitFlip;
+                    break;
+                case 3: // Flip 8 Random Bits
+                    GA.MutationFunction = GA.OctBitFlip;
+                    break;
+                case 4: // Flip 16 Random Bits
+                    GA.MutationFunction = GA.HexadecBitFlip;
+                    break;
+                case 5: // All Random Bits
+                    GA.MutationFunction = GA.CompleteRandom;
+                    break;
+            };
+        };
+
         mutationRateSlider = GetNode<Range>("./Settings Menu/Panel/Mutation Rate Slider");
         mutationRateBox = GetNode<Range>("./Settings Menu/Panel/Mutation Rate Box");
         mutationRateSlider.ValueChanged += (double value) => {

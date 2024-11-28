@@ -136,7 +136,7 @@ offset_left = 5.0
 offset_top = 366.0
 offset_right = 232.0
 offset_bottom = 397.0
-item_count = 3
+item_count = 6
 selected = 0
 popup/item_0/text = "Flip 1 Random Bit"
 popup/item_0/id = 0
@@ -144,6 +144,12 @@ popup/item_1/text = "Flip 2 Random Bits"
 popup/item_1/id = 1
 popup/item_2/text = "Flip 4 Random Bits"
 popup/item_2/id = 2
+popup/item_3/text = "Flip 8 Random Bits"
+popup/item_3/id = 3
+popup/item_4/text = "Flip 16 Random Bits"
+popup/item_4/id = 4
+popup/item_5/text = "All Random Bits"
+popup/item_5/id = 5
 
 [node name="Fitness Function Label" type="Label" parent="Panel"]
 layout_mode = 0

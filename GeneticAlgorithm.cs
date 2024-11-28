@@ -26,7 +26,13 @@ public partial class GeneticAlgorithm : Node
 	public Func<ulong, ulong, ulong> GeneMidpoints;
 
     // Define mutation function in use and all the available ones
-    Func<ulong, ulong> MutationFunction;
+    public Func<ulong, ulong> MutationFunction;
+    public Func<ulong, ulong> SingleBitFlip;
+    public Func<ulong, ulong> DoubleBitFlip;
+    public Func<ulong, ulong> QuadBitFlip;
+    public Func<ulong, ulong> OctBitFlip;
+    public Func<ulong, ulong> HexadecBitFlip;
+    public Func<ulong, ulong> CompleteRandom;
 
 
     [Export] int renderEveryXTicks = 60;
@@ -131,13 +137,78 @@ public partial class GeneticAlgorithm : Node
 			return child;
         };
 
-        MutationFunction = (ulong unMutatedGene) =>
+        SingleBitFlip = (ulong unMutatedChromosome) =>
 		{
+			// Choose and XOR (flip) one bit
 			int swapBit = rng.RandiRange(0, 63);
 			ulong swapMask = (ulong)0x0000000000000001 << swapBit;
 
-			return unMutatedGene ^ swapMask;
+			return unMutatedChromosome ^ swapMask;
 		};
+
+        DoubleBitFlip = (ulong unMutatedChromosome) =>
+        {
+			// Same as single but for 2 bits
+			ulong mutatedChromosome = unMutatedChromosome;
+			for (int flip = 0; flip < 2; ++flip) {
+				int swapBit = rng.RandiRange(0, 63);
+				ulong swapMask = (ulong)0x0000000000000001 << swapBit;
+				mutatedChromosome ^= swapMask;
+            }
+
+            return mutatedChromosome;
+        };
+
+        QuadBitFlip = (ulong unMutatedChromosome) =>
+        {
+            // Same as single but for 4 bits
+            ulong mutatedChromosome = unMutatedChromosome;
+            for (int flip = 0; flip < 4; ++flip)
+            {
+                int swapBit = rng.RandiRange(0, 63);
+                ulong swapMask = (ulong)0x0000000000000001 << swapBit;
+                mutatedChromosome ^= swapMask;
+            }
+
+            return mutatedChromosome;
+        };
+
+        OctBitFlip = (ulong unMutatedChromosome) =>
+        {
+            // Same as single but for 8 bits
+            ulong mutatedChromosome = unMutatedChromosome;
+            for (int flip = 0; flip < 8; ++flip)
+            {
+                int swapBit = rng.RandiRange(0, 63);
+                ulong swapMask = (ulong)0x0000000000000001 << swapBit;
+                mutatedChromosome ^= swapMask;
+            }
+
+            return mutatedChromosome;
+        };
+
+        HexadecBitFlip = (ulong unMutatedChromosome) =>
+        {
+            // Same as single but for 16 bits
+            ulong mutatedChromosome = unMutatedChromosome;
+            for (int flip = 0; flip < 16; ++flip)
+            {
+                int swapBit = rng.RandiRange(0, 63);
+                ulong swapMask = (ulong)0x0000000000000001 << swapBit;
+                mutatedChromosome ^= swapMask;
+            }
+
+            return mutatedChromosome;
+        };
+
+        CompleteRandom = (ulong unMutatedChromosome) =>
+        {
+            // Return a fresh completely random chromosome, ignoring the input
+            return (ulong)rng.Randi() << 32 | (ulong)rng.Randi();
+        };
+
+        // Set the default
+        MutationFunction = SingleBitFlip;
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
