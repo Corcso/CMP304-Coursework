@@ -92,6 +92,21 @@ public partial class UI : Control
             GA.maxTicks = (int)value;
         };
 
+        GetNode<OptionButton>("./Settings Menu/Panel/Fitness Function").ItemSelected += (long index) => {
+            switch (index)
+            {
+                case 0: // Furthest Fish, Death Bad
+                    GA.FitnessFunction = GA.FurthestAndRockKills;
+                    break;
+                case 1: // Furthest Fish
+                    GA.FitnessFunction = GA.FurthestOnly;
+                    break;
+                case 2: // Survival Only
+                    GA.FitnessFunction = GA.SurviveOnly;
+                    break;
+            };
+        };
+
         GetNode<OptionButton>("./Settings Menu/Panel/Recombination Function").ItemSelected += (long index) => {
             switch (index) {
                 case 0: // Single Point Crossover

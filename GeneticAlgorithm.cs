@@ -16,7 +16,10 @@ public partial class GeneticAlgorithm : Node
 	[Export] public float mutationPercentage;
 
 	// Define fitness function in use and all the available ones
-	Func<Fish, float> FitnessFunction;
+	public Func<Fish, float> FitnessFunction;
+	public Func<Fish, float> FurthestAndRockKills;
+	public Func<Fish, float> FurthestOnly;
+	public Func<Fish, float> SurviveOnly;
 
     // Define recombination function in use and all the available ones
 	public Func<ulong, ulong, ulong> RecombinationFunction;
@@ -59,14 +62,33 @@ public partial class GeneticAlgorithm : Node
 		currentState = State.PRE_SIM;
 
 		// Define fitness function
-		FitnessFunction = (Fish toEvaluate) =>
+		FurthestAndRockKills = (Fish toEvaluate) =>
 		{
-			if (!toEvaluate.alive) return 0;
+            // If the fish is dead return the smallest number
+			if (!toEvaluate.alive) return float.MinValue;
+            // Otherwise Return the distance of the fish 
+            // + 1k / 2k to get most values between 0 and 1
+            return (toEvaluate.Position.X + 1000.0f) / 2000.0f;
+		};
+        
+        FurthestOnly = (Fish toEvaluate) =>
+		{
+            // Return the distance of the fish 
+            // + 1k / 2k to get most values between 0 and 1
 			return (toEvaluate.Position.X + 1000.0f) / 2000.0f;
 		};
 
-		// Setup recombination functions
-		SinglePointCrossover = (ulong parent1, ulong parent2) => {
+        SurviveOnly = (Fish toEvaluate) =>
+        {
+            // If the fish is dead return 0 otherwise 1
+            if (!toEvaluate.alive) return 0;
+            return 1;
+        };
+
+        FitnessFunction = FurthestAndRockKills;
+
+        // Setup recombination functions
+        SinglePointCrossover = (ulong parent1, ulong parent2) => {
             // Get the swap after point (the left boundary)
             int swapAfter = 64 - rng.RandiRange(0, 64);
             // Turn it into a bit mask, if we had 8 bits, a swap after of 3 would be 0000 0111
