@@ -108,6 +108,8 @@ public partial class GeneticAlgorithm : Node
 			// We cant do (parent1 + parent2) / 2 as adding them could cause a overflow. 
         };
 
+		RecombinationFunction = SinglePointCrossover; // Set the default
+
 		GeneMidpoints = (ulong parent1, ulong parent2) => {
             // Get the midpoint of each gene, we can use (gene1 + gene2) / 2 as each gene is only 1 byte
              byte leftMovement =      (byte)((((parent1 & 0x0000FF0000000000) >> 40) + ((parent2 & 0x0000FF0000000000) >> 40)) / 2);
