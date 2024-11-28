@@ -97,12 +97,15 @@ public partial class UI : Control
             {
                 case 0: // Furthest Fish, Death Bad
                     GA.FitnessFunction = GA.FurthestAndRockKills;
+                    GA.fitnessFunctionName = "FurthestAndRockKills";
                     break;
                 case 1: // Furthest Fish
                     GA.FitnessFunction = GA.FurthestOnly;
+                    GA.fitnessFunctionName = "FurthestOnly";
                     break;
                 case 2: // Survival Only
                     GA.FitnessFunction = GA.SurviveOnly;
+                    GA.fitnessFunctionName = "SurviveOnly";
                     break;
             };
         };
@@ -111,15 +114,19 @@ public partial class UI : Control
             switch (index) {
                 case 0: // Single Point Crossover
                     GA.RecombinationFunction = GA.SinglePointCrossover;
+                    GA.recombinationFunctionName = "SinglePointCrossover";
                     break;
                 case 1: // Double Point Crossover
                     GA.RecombinationFunction = GA.DoublePointCrossover;
+                    GA.recombinationFunctionName = "DoublePointCrossover";
                     break;
                 case 2: // Chromosome Midpoint
                     GA.RecombinationFunction = GA.ChromosomeMidpoint;
+                    GA.recombinationFunctionName = "ChromosomeMidpoint";
                     break;
                 case 3: // Gene Midpoints
                     GA.RecombinationFunction = GA.GeneMidpoints;
+                    GA.recombinationFunctionName = "GeneMidpoints";
                     break;
             };    
         };
@@ -129,21 +136,27 @@ public partial class UI : Control
             {
                 case 0: // Flip 1 Random Bit
                     GA.MutationFunction = GA.SingleBitFlip;
+                    GA.mutationFunctionName = "SingleBitFlip";
                     break;
                 case 1: // Flip 2 Random Bits
                     GA.MutationFunction = GA.DoubleBitFlip;
+                    GA.mutationFunctionName = "DoubleBitFlip";
                     break;
                 case 2: // Flip 4 Random Bits
                     GA.MutationFunction = GA.QuadBitFlip;
+                    GA.mutationFunctionName = "QuadBitFlip";
                     break;
                 case 3: // Flip 8 Random Bits
                     GA.MutationFunction = GA.OctBitFlip;
+                    GA.mutationFunctionName = "OctBitFlip";
                     break;
                 case 4: // Flip 16 Random Bits
                     GA.MutationFunction = GA.HexadecBitFlip;
+                    GA.mutationFunctionName = "HexadecBitFlip";
                     break;
                 case 5: // All Random Bits
                     GA.MutationFunction = GA.CompleteRandom;
+                    GA.mutationFunctionName = "CompleteRandom";
                     break;
             };
         };

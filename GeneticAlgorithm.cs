@@ -15,13 +15,15 @@ public partial class GeneticAlgorithm : Node
 	[Export] public int squareGenerationSize;
 	[Export] public float mutationPercentage;
 
-	// Define fitness function in use and all the available ones
-	public Func<Fish, float> FitnessFunction;
+    // Define fitness function in use and all the available ones
+    public string fitnessFunctionName; // For statistical output
+    public Func<Fish, float> FitnessFunction;
 	public Func<Fish, float> FurthestAndRockKills;
 	public Func<Fish, float> FurthestOnly;
 	public Func<Fish, float> SurviveOnly;
 
     // Define recombination function in use and all the available ones
+    public string recombinationFunctionName; // For statistical output
 	public Func<ulong, ulong, ulong> RecombinationFunction;
 	public Func<ulong, ulong, ulong> SinglePointCrossover;
 	public Func<ulong, ulong, ulong> DoublePointCrossover;
@@ -29,6 +31,7 @@ public partial class GeneticAlgorithm : Node
 	public Func<ulong, ulong, ulong> GeneMidpoints;
 
     // Define mutation function in use and all the available ones
+    public string mutationFunctionName; // For statistical output
     public Func<ulong, ulong> MutationFunction;
     public Func<ulong, ulong> SingleBitFlip;
     public Func<ulong, ulong> DoubleBitFlip;
@@ -86,6 +89,7 @@ public partial class GeneticAlgorithm : Node
         };
 
         FitnessFunction = FurthestAndRockKills;
+        fitnessFunctionName = "FurthestAndRockKills";
 
         // Setup recombination functions
         SinglePointCrossover = (ulong parent1, ulong parent2) => {
@@ -137,8 +141,9 @@ public partial class GeneticAlgorithm : Node
         };
 
 		RecombinationFunction = SinglePointCrossover; // Set the default
+        recombinationFunctionName = "SinglePointCrossover";
 
-		GeneMidpoints = (ulong parent1, ulong parent2) => {
+        GeneMidpoints = (ulong parent1, ulong parent2) => {
             // Get the midpoint of each gene, we can use (gene1 + gene2) / 2 as each gene is only 1 byte
              byte leftMovement =      (byte)((((parent1 & 0x0000FF0000000000) >> 40) + ((parent2 & 0x0000FF0000000000) >> 40)) / 2);
              byte rightMovement =     (byte)((((parent1 & 0x000000FF00000000) >> 32) + ((parent2 & 0x000000FF00000000) >> 32)) / 2);
@@ -231,6 +236,7 @@ public partial class GeneticAlgorithm : Node
 
         // Set the default
         MutationFunction = SingleBitFlip;
+        mutationFunctionName = "SingleBitFlip";
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -318,7 +324,7 @@ public partial class GeneticAlgorithm : Node
         //thisGeneration = new Fish[400];
         CreateNewPopulation();
 		SpawnNewPopulation();
-
+        OutputStatistics();
     }
 
 	public void Start()
@@ -377,5 +383,20 @@ public partial class GeneticAlgorithm : Node
 	public State GetCurrentState() {
 		return currentState;
 	}
+
+    // Function called at the end of each generation to output statistics to a file.
+    private void OutputStatistics() {
+        FileAccess file;
+        if (!FileAccess.FileExists("res://../run.csv")) { 
+            file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.Write);
+            file.StoreLine("Generation, Best Fitness, Average Fitness, Mutation Rate, Mutation Function, Recombination Function, Fitness Function, Generatation Size, Generation Length");
+        }
+        else file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.ReadWrite);
+        file.SeekEnd(0);
+        file.StoreLine(
+            generation.ToString() + "," + bestFitness.ToString() + "," + avgFitness.ToString() + "," + 
+            mutationPercentage.ToString() + "," +mutationFunctionName + "," + recombinationFunctionName + "," + fitnessFunctionName + "," + squareGenerationSize * squareGenerationSize + "," + maxTicks.ToString());
+        file.Close();
+    }
 
 }
