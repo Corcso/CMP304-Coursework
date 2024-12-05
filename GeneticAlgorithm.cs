@@ -415,7 +415,11 @@ public partial class GeneticAlgorithm : Node
         for (int i = 0; i < rockDensity * rockRadius; ++i) {
             Node2D newRock = rockScene.Instantiate<Node2D>();
             GetNode<Node>("../Rocks").AddChild(newRock);
-            newRock.Position = new Vector2 (rng.RandiRange(-rockRadius, rockRadius), rng.RandiRange(-rockRadius, rockRadius));
+            // Generate random position for rock outside the safe zone
+            while (Mathf.Abs(newRock.Position.X) < 500 && Mathf.Abs(newRock.Position.Y) < 500)
+            {
+                newRock.Position = new Vector2(rng.RandiRange(-rockRadius, rockRadius), rng.RandiRange(-rockRadius, rockRadius));
+            }
         }
     }
 
