@@ -24,14 +24,8 @@ text = "0xFFAABBCC"
 [node name="Left Eye" type="RayCast2D" parent="."]
 target_position = Vector2(200, -60)
 
-[node name="Close Left Eye" type="RayCast2D" parent="."]
-target_position = Vector2(220, -30)
-
 [node name="Right Eye" type="RayCast2D" parent="."]
 target_position = Vector2(200, 60)
-
-[node name="Close Right Eye" type="RayCast2D" parent="."]
-target_position = Vector2(220, 30)
 
 [node name="Death Zone" type="Area2D" parent="."]
 script = ExtResource("3_k28ei")

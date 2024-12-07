@@ -12,8 +12,8 @@ public partial class Fish : Node2D
     [Export] byte tailHeight; // 0-255 (Remap 1-5)
     [Export] byte leftMovement; // 0-255 (Remap -0.15-0.15)
     [Export] byte rightMovement; // 0-255 (Remap -0.15-0.15)
-    [Export] byte closeLeftMovement; // 0-255 (Remap -0.15-0.15)
-    [Export] byte closeRightMovement; // 0-255 (Remap -0.15-0.15)
+    [Export] byte leftEyeAngle; // 0-255 (Remap 0-90)
+    [Export] byte rightEyeAngle; // 0-255 (Remap 0-90)
 
     float lengthActual;
 	float upperMuscleActual;
@@ -21,8 +21,8 @@ public partial class Fish : Node2D
 	float tailHeightActual;
 	float leftMovementActual;
 	float rightMovementActual;
-	float closeLeftMovementActual;
-	float closeRightMovementActual;
+	float leftEyeAngleActual;
+	float rightEyeAngleActual;
 
 	float flapSpeed; // (3^strength)/tailHeight
 	float dragConstant; // based on biggest muscle
@@ -31,9 +31,7 @@ public partial class Fish : Node2D
 	float lastFlapAngle;
 
     RayCast2D leftEye;
-    RayCast2D closeLeftEye;
     RayCast2D rightEye;
-    RayCast2D closeRightEye;
 
     Label text;
 
@@ -53,9 +51,7 @@ public partial class Fish : Node2D
         
 
         leftEye = GetNode<RayCast2D>("Left Eye");
-        closeLeftEye = GetNode<RayCast2D>("Close Left Eye");
         rightEye = GetNode<RayCast2D>("Right Eye");
-        closeRightEye = GetNode<RayCast2D>("Close Right Eye");
 
         GetNode<Area2D>("./Death Zone").BodyEntered += (Node2D b) => {
             alive = false;
@@ -77,8 +73,8 @@ public partial class Fish : Node2D
     /// <param name="gene">32 bit gene</param>
     public void LoadGene(ulong gene) {
         // Store attributes
-        closeLeftMovement =      (byte)((gene & 0xFF00000000000000) >> 56);
-        closeRightMovement =      (byte)((gene & 0x00FF000000000000) >> 48);
+        rightEyeAngle =      (byte)((gene & 0xFF00000000000000) >> 56);
+        leftEyeAngle =      (byte)((gene & 0x00FF000000000000) >> 48);
         leftMovement =      (byte)((gene & 0x0000FF0000000000) >> 40);
         rightMovement =     (byte)((gene & 0x000000FF00000000) >> 32);
         length =            (byte)((gene & 0x00000000FF000000) >> 24);
@@ -119,8 +115,8 @@ public partial class Fish : Node2D
     /// </summary>
     private void GrowFish() { 
         // First remap genes
-        closeLeftMovementActual = (float)leftMovement / 255 * 0.3f - 0.15f;
-        closeRightMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
+        leftEyeAngleActual = (float)leftEyeAngle / 255 * 90.0f;
+        rightEyeAngleActual = (float)rightEyeAngle / 255 * 90.0f;
         leftMovementActual = (float)leftMovement / 255 * 0.3f - 0.15f;
         rightMovementActual = (float)rightMovement / 255 * 0.3f - 0.15f;
         lengthActual = ((float)length / 255) * (10 - 4) + 4;
@@ -162,6 +158,12 @@ public partial class Fish : Node2D
         // Create the polygon
         GetChild<FishGenerator>(0).GenerateFishPolygon();
 
+        // Set raycasts for eye angles
+        leftEye = GetNode<RayCast2D>("Left Eye");
+        rightEye = GetNode<RayCast2D>("Right Eye");
+        leftEye.TargetPosition = new Vector2(Mathf.Sin(Mathf.DegToRad(leftEyeAngleActual)), -Mathf.Cos(Mathf.DegToRad(leftEyeAngleActual))) * 250;
+        rightEye.TargetPosition = new Vector2(Mathf.Sin(Mathf.DegToRad(rightEyeAngleActual)), Mathf.Cos(Mathf.DegToRad(rightEyeAngleActual))) * 250;
+
         // Debug output
         //GD.Print(Name + " I am speed: " + flapSpeed.ToString() + " and power " + tailHeight.ToString() + "L" + leftMovementActual.ToString() + "R" + rightMovementActual.ToString());
     }
@@ -187,7 +189,6 @@ public partial class Fish : Node2D
         float turnThisFrame = (Mathf.Clamp((-rightDistance * rightMovementActual) + 0.0f, 0, 1) - Mathf.Clamp((-leftDistance * leftMovementActual) + 0.0f, 0, 1)) * (float)delta * 0.7f;
 
         Rotate(turnThisFrame);
-        //GD.Print(turnThisFrame);
 
         
 
@@ -207,9 +208,9 @@ public partial class Fish : Node2D
     private string[] geneColours = { "red", "green", "blue", "yellow", "purple", "white", "orange", "pink" };
 
     public string GetChromosomeBarcode() {
-        string toReturn = "        ";
+        string toReturn = "";
         // For each Gene
-        for (int i = 16; i < 64; i += 8) { 
+        for (int i = 0; i < 64; i += 8) { 
             byte gene = (byte)((myGene & (0xFF00000000000000 >> i)) >> (56-i));
             toReturn += "[color="+ geneColours[i/8]+"]";
             // For each pair of bytes
@@ -242,6 +243,8 @@ public partial class Fish : Node2D
             "[color=" + geneColours[6] + "]Lower Muscle (0.1-1.5): " + MathF.Round(lowerMuscleActual, 3) + "[/color]\n" +
             "[color=" + geneColours[7] + "]Tail Height (1-5): " + MathF.Round(tailHeightActual, 3) + "[/color]\n" +
             "[color=" + geneColours[3] + "]L. Turn Fac. (-0.15-0.15): " + MathF.Round(leftMovementActual, 3) + "[/color]\n" +
-            "[color=" + geneColours[2] + "]R. Turn Fac. (-0.15-0.15): " + MathF.Round(rightMovementActual, 3) + "[/color]\n";
+            "[color=" + geneColours[2] + "]R. Turn Fac. (-0.15-0.15): " + MathF.Round(rightMovementActual, 3) + "[/color]\n" +
+            "[color=" + geneColours[1] + "]R. Eye Angle (0-90): " + MathF.Round(leftEyeAngleActual, 3) + "[/color]\n" +
+            "[color=" + geneColours[0] + "]L. Eye Angle (0-90): " + MathF.Round(rightEyeAngleActual, 3) + "[/color]\n";
     }
 }

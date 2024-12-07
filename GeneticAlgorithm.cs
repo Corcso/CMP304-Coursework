@@ -155,7 +155,9 @@ public partial class GeneticAlgorithm : Node
 
         GeneMidpoints = (ulong parent1, ulong parent2) => {
             // Get the midpoint of each gene, we can use (gene1 + gene2) / 2 as each gene is only 1 byte
-             byte leftMovement =      (byte)((((parent1 & 0x0000FF0000000000) >> 40) + ((parent2 & 0x0000FF0000000000) >> 40)) / 2);
+            byte leftEyeAngle = (byte)((((parent1 & 0xFF00000000000000) >> 56) + ((parent2 & 0xFF00000000000000) >> 56)) / 2);
+            byte rightEyeAngle = (byte)((((parent1 & 0x00FF000000000000) >> 48) + ((parent2 & 0x00FF000000000000) >> 48)) / 2);
+            byte leftMovement =      (byte)((((parent1 & 0x0000FF0000000000) >> 40) + ((parent2 & 0x0000FF0000000000) >> 40)) / 2);
              byte rightMovement =     (byte)((((parent1 & 0x000000FF00000000) >> 32) + ((parent2 & 0x000000FF00000000) >> 32)) / 2);
              byte length =            (byte)((((parent1 & 0x00000000FF000000) >> 24) + ((parent2 & 0x00000000FF000000) >> 24)) / 2);
              byte upperMuscle =       (byte)((((parent1 & 0x0000000000FF0000) >> 16) + ((parent2 & 0x0000000000FF0000) >> 16)) / 2);
@@ -164,6 +166,8 @@ public partial class GeneticAlgorithm : Node
 
 			// Combine these genes back into a chromosome and return
 			ulong child = 0;
+			child |= (ulong)leftEyeAngle << 56;
+			child |= (ulong)rightEyeAngle << 48;
 			child |= (ulong)leftMovement << 40;
 			child |= (ulong)rightMovement << 32;
 			child |= (ulong)length << 24;
