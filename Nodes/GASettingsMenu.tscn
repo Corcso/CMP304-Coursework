@@ -4,7 +4,7 @@
 line_spacing = -8.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_505px"]
-line_spacing = -8.0
+line_spacing = -4.0
 font_size = 11
 
 [node name="Settings Menu" type="Control"]
@@ -302,3 +302,43 @@ max_value = 4.0
 step = 0.1
 value = 1.0
 tick_count = 5
+
+[node name="Generation Cap Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 333.0
+offset_right = 459.0
+offset_bottom = 441.0
+
+[node name="Generation Cap Label" type="Label" parent="Generation Cap Panel"]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 192.0
+offset_bottom = 31.0
+text = "Generation Cap"
+label_settings = SubResource("LabelSettings_rji7p")
+
+[node name="Generation Cap" type="SpinBox" parent="Generation Cap Panel"]
+offset_left = 12.0
+offset_top = 39.0
+offset_right = 173.0
+offset_bottom = 70.0
+max_value = 10000.0
+value = 100.0
+
+[node name="Generation Cap Active" type="CheckBox" parent="Generation Cap Panel"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 146.0
+offset_top = 9.0
+offset_right = 170.0
+offset_bottom = 33.0
+
+[node name="Generation Cap Description" type="Label" parent="Generation Cap Panel"]
+offset_left = 12.0
+offset_top = 74.0
+offset_right = 244.0
+offset_bottom = 97.0
+text = "Restarts simulation after
+generation X"
+label_settings = SubResource("LabelSettings_505px")

@@ -195,6 +195,14 @@ public partial class UI : Control
             GA.dragFactor = (float)value;
         };
 
+        GetNode<Range>("./Settings Menu/Generation Cap Panel/Generation Cap").ValueChanged += (double value) => {
+            GA.generationCap = (int)value;
+        };
+
+        GetNode<CheckBox>("./Settings Menu/Generation Cap Panel/Generation Cap Active").Toggled += (bool value) => {
+            GA.generationCapActive = value;
+        };
+
     }
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

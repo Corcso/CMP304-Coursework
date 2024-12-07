@@ -61,9 +61,12 @@ public partial class GeneticAlgorithm : Node
     public float dragFactor = 0.5f;
     public float strengthMultiplier = 1;
 
-    // Generation Simulation ID
+    // GA Simulation ID
     ulong simulationID;
 
+    // Generation cap, a new simulation will automatically start after X generations simulated
+    public bool generationCapActive = false;
+    public int generationCap = 100;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -263,7 +266,15 @@ public partial class GeneticAlgorithm : Node
 		if (ticksThisGeneration > maxTicks) {
             NewGeneration();
             ticksThisGeneration = 0;
-			generation++;
+
+            if (generationCapActive && generation >= generationCap)
+            {
+                End();
+                Start();
+                return;
+            }
+
+            generation++;
 		}
 
 		if(ticksThisGeneration % renderEveryXTicks == 0) { RenderingServer.RenderLoopEnabled = true; }
