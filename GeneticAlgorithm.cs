@@ -54,8 +54,12 @@ public partial class GeneticAlgorithm : Node
 
     // Rock Spawning
     [Export] PackedScene rockScene;
-    [Export] int rockRadius;
-    [Export] float rockDensity;
+    public int rockRadius = 4000;
+    public float rockDensity = 0.5f;
+
+    // World fish paramaters
+    public float dragFactor = 0.5f;
+    public float strengthMultiplier = 1;
 
 
     // Called when the node enters the scene tree for the first time.
@@ -345,9 +349,9 @@ public partial class GeneticAlgorithm : Node
         for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
             thisGeneration[i] = FishTemplate.Instantiate<Fish>();
+            thisGeneration[i].GA = this;
             thisGeneration[i].LoadRandom();
             thisGeneration[i].Position = new Vector2(-500, rng.RandiRange(-300, 300));
-            thisGeneration[i].GA = this;
             GetNode<Node>("../Fish Tank").AddChild(thisGeneration[i]);
         }
 

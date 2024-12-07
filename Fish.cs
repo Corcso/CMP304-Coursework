@@ -129,9 +129,9 @@ public partial class Fish : Node2D
         tailHeightActual = ((float)tailHeight / 255) * (5 - 1) + 1;
 
         // Next clalculate speed and drag
-        float strength = (upperMuscleActual + lowerMuscleActual) / 4.0f;
+        float strength = (upperMuscleActual + lowerMuscleActual) / 4.0f * GA.strengthMultiplier;
         flapSpeed = Mathf.Pow(9, strength) / (tailHeightActual * tailHeightActual);
-        dragConstant = Mathf.Pow(Mathf.Max(upperMuscleActual, lowerMuscleActual), 2);
+        dragConstant = Mathf.Pow(Mathf.Max(upperMuscleActual, lowerMuscleActual), 2) * GA.dragFactor;
 
         // Create Polygon points
         Node2D head = new Node2D();

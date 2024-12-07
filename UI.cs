@@ -16,6 +16,7 @@ public partial class UI : Control
     Label lastAverageFitness_Label;
 
     Label squareGenerationToActualSize_Label;
+    Label rockCount_Label;
 
     Label fishNumber_Label;
     RichTextLabel fishBarcode_Label;
@@ -52,6 +53,8 @@ public partial class UI : Control
         fishBarcode_Label = GetNode<RichTextLabel>("./Single Fish View/Panel/Fish Chromosome");
         fishGenes_Label = GetNode<RichTextLabel>("./Single Fish View/Panel/Fish Genes");
 
+        rockCount_Label = GetNode<Label>("./Settings Menu/World Settings/Rock Count");
+        
         // Setup signals (for input)
         GetNode<Button>("./Currently Playing UI/Pause Button").Pressed += () => {
             if (GA.GetCurrentState() != GeneticAlgorithm.State.PAUSED)
@@ -172,6 +175,25 @@ public partial class UI : Control
             if (mutationRateSlider.Value != value) mutationRateSlider.Value = value;
         };
 
+
+        // World Settings
+        GetNode<Range>("./Settings Menu/World Settings/Rock Radius").ValueChanged += (double value) => {
+            GA.rockRadius = (int)value;
+            rockCount_Label.Text = ((int)(GA.rockRadius * GA.rockDensity)).ToString() + " rocks will spawn.";
+        };
+
+        GetNode<Range>("./Settings Menu/World Settings/Rock Density").ValueChanged += (double value) => {
+            GA.rockDensity = (float)value;
+            rockCount_Label.Text = ((int)(GA.rockRadius * GA.rockDensity)).ToString() + " rocks will spawn.";
+        };
+
+        GetNode<Range>("./Settings Menu/World Settings/Drag Factor").ValueChanged += (double value) => {
+            GA.dragFactor = (float)value;
+        };
+
+        GetNode<Range>("./Settings Menu/World Settings/Strength Multiplier").ValueChanged += (double value) => {
+            GA.dragFactor = (float)value;
+        };
 
     }
 
