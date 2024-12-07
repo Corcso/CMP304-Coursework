@@ -61,6 +61,9 @@ public partial class GeneticAlgorithm : Node
     public float dragFactor = 0.5f;
     public float strengthMultiplier = 1;
 
+    // Generation Simulation ID
+    ulong simulationID;
+
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -349,6 +352,8 @@ public partial class GeneticAlgorithm : Node
         thisGeneration = new Fish[squareGenerationSize * squareGenerationSize];
         toCreateNextGeneration = new ulong[squareGenerationSize];
 
+        simulationID = (ulong)rng.Randi() << 32 | (ulong)rng.Randi();
+
         // Summon initial generation
         for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
@@ -405,13 +410,15 @@ public partial class GeneticAlgorithm : Node
         FileAccess file;
         if (!FileAccess.FileExists("res://../run.csv")) { 
             file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.Write);
-            file.StoreLine("Generation, Best Fitness, Average Fitness, Mutation Rate, Mutation Function, Recombination Function, Fitness Function, Generatation Size, Generation Length");
+            file.StoreLine("Simulation ID,Generation,Best Fitness,Average Fitness,Mutation Rate,Mutation Function,Recombination Function,Fitness Function,Generatation Size,Generation Length,Rock Radius,Rock Density,Drag Factor,Strength Multiplier");
         }
         else file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.ReadWrite);
         file.SeekEnd(0);
         file.StoreLine(
+            simulationID.ToString("X") + "," +
             generation.ToString() + "," + bestFitness.ToString() + "," + avgFitness.ToString() + "," + 
-            mutationPercentage.ToString() + "," +mutationFunctionName + "," + recombinationFunctionName + "," + fitnessFunctionName + "," + squareGenerationSize * squareGenerationSize + "," + maxTicks.ToString());
+            mutationPercentage.ToString() + "," +mutationFunctionName + "," + recombinationFunctionName + "," + fitnessFunctionName + "," + squareGenerationSize * squareGenerationSize + "," + maxTicks.ToString() + "," +
+            rockRadius.ToString() + "," + rockDensity.ToString() + "," + dragFactor.ToString() + "," + strengthMultiplier.ToString() );
         file.Close();
     }
 
