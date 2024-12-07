@@ -13,7 +13,7 @@ public partial class UI : Control
     Label currentTick_Label;
     Label currentGeneration_Label;
     Label lastBestFitness_Label;
-    Label lastAverageFitness_Label;
+    Label lastLargestDiff_Label;
 
     Label squareGenerationToActualSize_Label;
     Label rockCount_Label;
@@ -47,7 +47,7 @@ public partial class UI : Control
         currentTick_Label = GetNode<Label>("./Currently Playing UI/Panel/Ticks");
         currentGeneration_Label = GetNode<Label>("./Currently Playing UI/Panel/Generation");
         lastBestFitness_Label = GetNode<Label>("./Currently Playing UI/Panel/Last Best Fitness");
-        lastAverageFitness_Label = GetNode<Label>("./Currently Playing UI/Panel/Last Mean Fitness");
+        lastLargestDiff_Label = GetNode<Label>("./Currently Playing UI/Panel/Last Largest Difference");
         squareGenerationToActualSize_Label = GetNode<Label>("./Settings Menu/Panel/Actual Generation Size");
         fishNumber_Label = GetNode<Label>("./Single Fish View/Panel/Fish Name");
         fishBarcode_Label = GetNode<RichTextLabel>("./Single Fish View/Panel/Fish Chromosome");
@@ -211,7 +211,7 @@ public partial class UI : Control
         currentTick_Label.Text = "Tick: " + GA.ticksThisGeneration.ToString();
         currentGeneration_Label.Text = "Gen: " + GA.generation.ToString();
         lastBestFitness_Label.Text = "Best Fitness: " + MathF.Round(GA.bestFitness, 3).ToString();
-        lastAverageFitness_Label.Text = "Avg. Fitness: " + MathF.Round(GA.avgFitness, 3).ToString();
+        lastLargestDiff_Label.Text = "Largest Diff.: " + GA.largestDifference.ToString();
 	}
 
     public void ShowFishOverview(Fish fishToShow)

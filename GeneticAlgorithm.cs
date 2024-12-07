@@ -49,8 +49,12 @@ public partial class GeneticAlgorithm : Node
 	public enum State { PRE_SIM, SIMULATING, PAUSED};
 	State currentState;
 
-	public float bestFitness;
-	public float avgFitness;
+	public float bestFitness; // Best fitness of the last generation
+	public float avgFitness; // Average fitness of the last generation
+	public int largestDifference; // Largest bit difference of the last generation. 
+    // E.g. chromosome 0b1101 and 0b1001 have a difference of 1
+    //      chromosome 0b1011 and 0b1100 have a difference of 3
+    // Used to measure convergence
 
     // Rock Spawning
     [Export] PackedScene rockScene;
@@ -300,6 +304,25 @@ public partial class GeneticAlgorithm : Node
         }
 		avgFitness = totalFitness / (squareGenerationSize * squareGenerationSize);
 
+        // Calculate last generations largest difference, higher numbers random pool, lower numbers converged pool
+        largestDifference = 0;
+        for (int i = 0; i < squareGenerationSize * squareGenerationSize; ++i)
+        {
+            for (int j = 0; j < squareGenerationSize * squareGenerationSize; ++j)
+            {
+                int thisDifference = 0;
+                for (int b = 0; b < 64; ++b)
+                {
+                    ulong mask = (ulong)0x1 << b;
+                    if ((mask & (thisGeneration[i].GetGene() ^ thisGeneration[j].GetGene())) > 0) thisDifference++;
+                }
+                if (thisDifference > largestDifference)
+                {
+                    largestDifference = thisDifference;
+                }
+            }
+        }
+
         for (int i = 0; i < squareGenerationSize; i++)
         {
 			toCreateNextGeneration[i] = thisGeneration[i + (squareGenerationSize * squareGenerationSize) - squareGenerationSize].GetGene();
@@ -418,16 +441,21 @@ public partial class GeneticAlgorithm : Node
 
     // Function called at the end of each generation to output statistics to a file.
     private void OutputStatistics() {
-        FileAccess file;
-        if (!FileAccess.FileExists("res://../run.csv")) { 
-            file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.Write);
-            file.StoreLine("Simulation ID,Generation,Best Fitness,Average Fitness,Mutation Rate,Mutation Function,Recombination Function,Fitness Function,Generatation Size,Generation Length,Rock Radius,Rock Density,Drag Factor,Strength Multiplier");
+        FileAccess file = null;
+        // Wait until file is free
+        while (file == null || !file.IsOpen())
+        {
+            if (!FileAccess.FileExists("res://../run.csv"))
+            {
+                file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.Write);
+                file.StoreLine("Simulation ID,Generation,Best Fitness,Average Fitness,Largest Chromosome Difference,Mutation Rate,Mutation Function,Recombination Function,Fitness Function,Generatation Size,Generation Length,Rock Radius,Rock Density,Drag Factor,Strength Multiplier");
+            }
+            else file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.ReadWrite);
         }
-        else file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.ReadWrite);
         file.SeekEnd(0);
         file.StoreLine(
             simulationID.ToString("X") + "," +
-            generation.ToString() + "," + bestFitness.ToString() + "," + avgFitness.ToString() + "," + 
+            generation.ToString() + "," + bestFitness.ToString() + "," + avgFitness.ToString() + "," + largestDifference.ToString() + "," +
             mutationPercentage.ToString() + "," +mutationFunctionName + "," + recombinationFunctionName + "," + fitnessFunctionName + "," + squareGenerationSize * squareGenerationSize + "," + maxTicks.ToString() + "," +
             rockRadius.ToString() + "," + rockDensity.ToString() + "," + dragFactor.ToString() + "," + strengthMultiplier.ToString() );
         file.Close();

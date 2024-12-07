@@ -311,6 +311,7 @@ offset_right = 459.0
 offset_bottom = 441.0
 
 [node name="Generation Cap Label" type="Label" parent="Generation Cap Panel"]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 8.0
 offset_right = 192.0
@@ -319,6 +320,7 @@ text = "Generation Cap"
 label_settings = SubResource("LabelSettings_rji7p")
 
 [node name="Generation Cap" type="SpinBox" parent="Generation Cap Panel"]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 39.0
 offset_right = 173.0
@@ -335,6 +337,7 @@ offset_right = 170.0
 offset_bottom = 33.0
 
 [node name="Generation Cap Description" type="Label" parent="Generation Cap Panel"]
+layout_mode = 0
 offset_left = 12.0
 offset_top = 74.0
 offset_right = 244.0

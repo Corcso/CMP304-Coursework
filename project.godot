@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="CMP304Coursework"
+run/main_scene="res://node_2d.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/stretch/mode="viewport"
 
 [dotnet]
 

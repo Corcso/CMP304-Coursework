@@ -49,14 +49,14 @@ offset_bottom = 40.0
 theme_override_font_sizes/font_size = 28
 text = "Last Gen Stats"
 
-[node name="Last Mean Fitness" type="Label" parent="Panel"]
+[node name="Last Largest Difference" type="Label" parent="Panel"]
 layout_mode = 0
 offset_left = 883.0
 offset_top = 1.0
 offset_right = 1060.0
 offset_bottom = 40.0
 theme_override_font_sizes/font_size = 28
-text = "Avg. Fitness: "
+text = "Largest Diff.:"
 
 [node name="Pause Button" type="Button" parent="."]
 layout_mode = 0
