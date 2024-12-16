@@ -128,8 +128,8 @@ public partial class GeneticAlgorithm : Node
             ulong mask = 0xFFFFFFFFFFFFFFFF >> swapAfter;
 
             // Take parent1's DNA from inside the mask, and parent2's DNA from outside.
-            ulong childGene = (parent1 & mask) | (parent2 & ~mask);
-			return childGene;
+            ulong childChromosome = (parent1 & mask) | (parent2 & ~mask);
+			return childChromosome;
 		};
 
         DoublePointCrossover = (ulong parent1, ulong parent2) => {
@@ -150,8 +150,8 @@ public partial class GeneticAlgorithm : Node
 			ulong swapMask = afterMask & beforeMask;
 
 			// Take parent1's DNA from inside the mask, and parent2's DNA from outside.
-            ulong childGene = (parent1 & swapMask) | (parent2 & ~swapMask);
-            return childGene;
+            ulong childChromosome = (parent1 & swapMask) | (parent2 & ~swapMask);
+            return childChromosome;
         };
 
 		ChromosomeMidpoint = (ulong parent1, ulong parent2) => {
