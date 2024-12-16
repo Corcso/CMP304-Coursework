@@ -35,10 +35,7 @@ public partial class Fish : Node2D
     RayCast2D leftEye;
     RayCast2D rightEye;
 
-    // Currently disabled, text label which used to display gene
-    Label text;
-
-    // Public for test
+    // Is Alive boolean
     public bool alive;
 
     // Reference to GA to check if paused and whatnot (Will be set by the GA on fish creation)
@@ -86,10 +83,6 @@ public partial class Fish : Node2D
         upperMuscle =       (byte)((chromosome & 0x0000000000FF0000) >> 16);
         lowerMuscle =       (byte)((chromosome & 0x000000000000FF00) >> 8);
         tailHeight =        (byte)((chromosome & 0x00000000000000FF) >> 0);
-
-        // Set text, NEEDS REMOVED
-        text = GetNode<Label>("./Text");
-        text.Text = (chromosome & 0xFFFFFFFFFFFFFFFF).ToString("X");
 
         myChromosome = chromosome;
         GrowFish();

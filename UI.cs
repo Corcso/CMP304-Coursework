@@ -71,6 +71,7 @@ public partial class UI : Control
         };
         GetNode<Button>("./Currently Playing UI/Stop Button").Pressed += () => { 
             GA.End();
+            GetNode<Button>("./Currently Playing UI/Pause Button").Text = "Pause Simulation";
             settingsPage.Show();
             simulationPage.Hide();
         };

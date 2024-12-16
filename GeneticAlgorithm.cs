@@ -501,13 +501,13 @@ public partial class GeneticAlgorithm : Node
         // Wait until file is free, allows multithread access. Please note if there is critical errors the program may hang here. 
         while (file == null || !file.IsOpen())
         {
-            if (!FileAccess.FileExists("res://../run.csv"))
+            if (!FileAccess.FileExists("res://./run.csv"))
             {
-                file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.Write);
+                file = FileAccess.Open("res://./run.csv", FileAccess.ModeFlags.Write);
                 // If first write, add column headers
                 file.StoreLine("Simulation ID,Generation,Best Fitness,Average Fitness,Largest Chromosome Difference,Mutation Rate,Mutation Function,Recombination Function,Fitness Function,Generatation Size,Generation Length,Rock Radius,Rock Density,Drag Factor,Strength Multiplier");
             }
-            else file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.ReadWrite);
+            else file = FileAccess.Open("res://./run.csv", FileAccess.ModeFlags.ReadWrite);
         }
         // Go to the end and add this generation as a line. 
         file.SeekEnd(0);
