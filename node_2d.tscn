@@ -1,5 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://kcbcke8atc26"]
+[gd_scene load_steps=9 format=3 uid="uid://kcbcke8atc26"]
 
+[ext_resource type="Script" path="res://CameraMovement.cs" id="1_skwd1"]
 [ext_resource type="PackedScene" uid="uid://dltgvs1aybp0r" path="res://Nodes/rock.tscn" id="3_6meuq"]
 [ext_resource type="PackedScene" uid="uid://6h64lxx347x5" path="res://Nodes/Fish.tscn" id="3_yqfy1"]
 [ext_resource type="Script" path="res://GeneticAlgorithm.cs" id="4_k6qkw"]
@@ -11,6 +12,7 @@
 [node name="Node2D" type="Node2D"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("1_skwd1")
 
 [node name="Genetic Algorithm" type="Node" parent="."]
 script = ExtResource("4_k6qkw")
