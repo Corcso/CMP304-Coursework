@@ -473,6 +473,7 @@ public partial class GeneticAlgorithm : Node
             while (Mathf.Abs(newRock.Position.X) < 500 && Mathf.Abs(newRock.Position.Y) < 500)
             {
                 newRock.Position = new Vector2(rng.RandiRange(-rockRadius, rockRadius), rng.RandiRange(-rockRadius, rockRadius));
+                newRock.RotationDegrees = rng.RandiRange(0, 360);
             }
         }
     }

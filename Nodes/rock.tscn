@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dltgvs1aybp0r"]
 
-[ext_resource type="Texture2D" uid="uid://birtx5jgoidfi" path="res://icon.svg" id="1_6x6ey"]
+[ext_resource type="Texture2D" uid="uid://cqfwgvyvphflc" path="res://Rock.png" id="1_hpvbi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_r6t0f"]
 radius = 146.086
@@ -13,5 +13,5 @@ shape = SubResource("CircleShape2D_r6t0f")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(1.5, -3)
-scale = Vector2(2.03906, 2.14063)
-texture = ExtResource("1_6x6ey")
+scale = Vector2(2.58, 2.58)
+texture = ExtResource("1_hpvbi")
