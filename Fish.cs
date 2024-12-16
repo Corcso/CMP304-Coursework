@@ -5,7 +5,7 @@ public partial class Fish : Node2D
 {
 
     // Fish Parameters
-    ulong myGene;
+    ulong myChromosome;
 	[Export] byte length; // 0-255 (Remap 4-10)
     [Export] byte upperMuscle; // 0-255 (Remap 0.1-1.5)
     [Export] byte lowerMuscle; // 0-255 (Remap 0.1-1.5)
@@ -15,6 +15,7 @@ public partial class Fish : Node2D
     [Export] byte leftEyeAngle; // 0-255 (Remap 0-90)
     [Export] byte rightEyeAngle; // 0-255 (Remap 0-90)
 
+    // Fish paramaters in the ranges above
     float lengthActual;
 	float upperMuscleActual;
 	float lowerMuscleActual;
@@ -25,14 +26,16 @@ public partial class Fish : Node2D
 	float rightEyeAngleActual;
 
 	float flapSpeed; // (3^strength)/tailHeight
-	float dragConstant; // based on biggest muscle
+	float dragConstant; // Based on biggest muscle, constant force applied against the fish.
 
-	float timeAlive;
-	float lastFlapAngle;
+	float timeAlive; // Time the fish was alive for
+	float lastFlapAngle; // Last flap angle of the sin wave the fish was at. 
 
+    // Left and right eye raycasts
     RayCast2D leftEye;
     RayCast2D rightEye;
 
+    // Currently disabled, text label which used to display gene
     Label text;
 
     // Public for test
@@ -44,15 +47,14 @@ public partial class Fish : Node2D
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
 	{
+        // Set defaults and get any relevant nodes
         timeAlive = 0;
         lastFlapAngle = 0;
-
-        GD.Print("Ready!");
-        
 
         leftEye = GetNode<RayCast2D>("Left Eye");
         rightEye = GetNode<RayCast2D>("Right Eye");
 
+        // If something enters our death zone "kill" the fish. Fish cannot collide with eachother, only rocks.
         GetNode<Area2D>("./Death Zone").BodyEntered += (Node2D b) => {
             alive = false;
             Hide();
@@ -61,36 +63,40 @@ public partial class Fish : Node2D
         alive = true;
     }
 
+    /// <summary>
+    /// Load a random chromosome into the fish
+    /// </summary>
     public void LoadRandom() { 
         RandomNumberGenerator rng = new RandomNumberGenerator();
 
-        LoadGene((ulong)rng.Randi() << 32 | (ulong)rng.Randi());
+        LoadChromosome((ulong)rng.Randi() << 32 | (ulong)rng.Randi());
     }
 
     /// <summary>
-    /// Loads a gene from its binary footprint
+    /// Loads a chromosome from its binary format
     /// </summary>
-    /// <param name="gene">32 bit gene</param>
-    public void LoadGene(ulong gene) {
+    /// <param name="chromosome">64 bit chromosome</param>
+    public void LoadChromosome(ulong chromosome) {
         // Store attributes
-        rightEyeAngle =      (byte)((gene & 0xFF00000000000000) >> 56);
-        leftEyeAngle =      (byte)((gene & 0x00FF000000000000) >> 48);
-        leftMovement =      (byte)((gene & 0x0000FF0000000000) >> 40);
-        rightMovement =     (byte)((gene & 0x000000FF00000000) >> 32);
-        length =            (byte)((gene & 0x00000000FF000000) >> 24);
-        upperMuscle =       (byte)((gene & 0x0000000000FF0000) >> 16);
-        lowerMuscle =       (byte)((gene & 0x000000000000FF00) >> 8);
-        tailHeight =        (byte)((gene & 0x00000000000000FF) >> 0);
+        rightEyeAngle =      (byte)((chromosome & 0xFF00000000000000) >> 56);
+        leftEyeAngle =      (byte)((chromosome & 0x00FF000000000000) >> 48);
+        leftMovement =      (byte)((chromosome & 0x0000FF0000000000) >> 40);
+        rightMovement =     (byte)((chromosome & 0x000000FF00000000) >> 32);
+        length =            (byte)((chromosome & 0x00000000FF000000) >> 24);
+        upperMuscle =       (byte)((chromosome & 0x0000000000FF0000) >> 16);
+        lowerMuscle =       (byte)((chromosome & 0x000000000000FF00) >> 8);
+        tailHeight =        (byte)((chromosome & 0x00000000000000FF) >> 0);
 
+        // Set text, NEEDS REMOVED
         text = GetNode<Label>("./Text");
-        text.Text = (gene & 0xFFFFFFFFFFFFFFFF).ToString("X");
+        text.Text = (chromosome & 0xFFFFFFFFFFFFFFFF).ToString("X");
 
-        myGene = gene;
+        myChromosome = chromosome;
         GrowFish();
     }
 
     public void Reset() {
-        myGene = 0;
+        myChromosome = 0;
         leftMovement = 0;
         rightMovement = 0;
         length = 0;
@@ -105,8 +111,12 @@ public partial class Fish : Node2D
         Rotation = 0;
     }
 
-    public ulong GetGene() {
-        return myGene;
+    /// <summary>
+    /// Get the chromosome from the fish
+    /// </summary>
+    /// <returns>Binary Chromosome</returns>
+    public ulong GetChromosome() {
+        return myChromosome;
     }
 
     /// <summary>
@@ -182,39 +192,51 @@ public partial class Fish : Node2D
         float rightDistance = 1000;
         if (leftEye.IsColliding()) leftDistance = GlobalPosition.DistanceSquaredTo(leftEye.GetCollisionPoint()) / 1000.0f;
         if (rightEye.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
-        //if (close.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
-        ///if (rightEye.IsColliding()) rightDistance = GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f;
-        //if (rightEye.IsColliding()) GD.Print(GlobalPosition.DistanceSquaredTo(rightEye.GetCollisionPoint()) / 1000.0f);
 
-        float turnThisFrame = (Mathf.Clamp((-rightDistance * rightMovementActual) + 0.0f, 0, 1) - Mathf.Clamp((-leftDistance * leftMovementActual) + 0.0f, 0, 1)) * (float)delta * 0.7f;
+        // Turn amount formula
+        float turnThisFrame = (Mathf.Clamp((rightDistance * rightMovementActual), -1, 1) - Mathf.Clamp((leftDistance * leftMovementActual), -1, 1)) * (float)delta * 0.7f;
 
         Rotate(turnThisFrame);
 
         
+        //Process movement
 
+        // Get the angle of the tail this frame
 		float currentFlapAngle = Mathf.Sin(timeAlive + flapSpeed * 6) * tailHeight;
+        // Compare the difference between this frame and last to get angle difference, e.g amount flapped. 
 		float flapThisFrame = Mathf.Abs(currentFlapAngle - lastFlapAngle);
 
+        // Convert this into a distance to move. 
 		float toMove = Mathf.Clamp((flapThisFrame * (float)delta * 50) - (dragConstant * 2.0f), 0, 100000);
 
-
+        // Move the fish, this distance forward. 
         Position += toMove * GlobalTransform.BasisXform(new Vector2(1, 0));
 
+        // Set last flap angle to the one calculated this frame
 		lastFlapAngle = currentFlapAngle;
+
+        // Add onto time alive
         timeAlive += (float)delta;
 
     }
     
+
+    // Colours for each gene in the fish view menu
     private string[] geneColours = { "red", "green", "blue", "yellow", "purple", "white", "orange", "pink" };
 
+    /// <summary>
+    /// Returns the Chromosome Barcode for use in fish view screen.
+    /// </summary>
+    /// <returns>Chromosome Barcode String</returns>
     public string GetChromosomeBarcode() {
         string toReturn = "";
         // For each Gene
         for (int i = 0; i < 64; i += 8) { 
-            byte gene = (byte)((myGene & (0xFF00000000000000 >> i)) >> (56-i));
+            byte gene = (byte)((myChromosome & (0xFF00000000000000 >> i)) >> (56-i));
             toReturn += "[color="+ geneColours[i/8]+"]";
             // For each pair of bytes
             for (int bp = 0; bp < 8; bp += 2) { 
+            // Switch over 00 01 10 or 11
             switch ((byte)((gene & (0b11000000 >> bp)) >> (6 - bp)))
                 {
                     case 0b00:
@@ -231,12 +253,17 @@ public partial class Fish : Node2D
                         break;
                 }
             }
+            // If halfway, newline
             if (i == 24) toReturn += "\n";
             toReturn += "[/color]";
         }
         return toReturn;
     }
 
+    /// <summary>
+    /// Returns the Gene description from this fish's chromosome. Uses the same colours as the barcode. 
+    /// </summary>
+    /// <returns>Gene description</returns>
     public string GetGeneDescription() {
         return "[color=" + geneColours[4] + "]Length (4-10): " + MathF.Round(lengthActual, 3) +"[/color]\n" +
             "[color=" + geneColours[5] + "]Upper Muscle (0.1-1.5): " + MathF.Round(upperMuscleActual, 3) + "[/color]\n" +

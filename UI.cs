@@ -164,6 +164,7 @@ public partial class UI : Control
             };
         };
 
+        // Mutation rate has a slider and number box, make sure these sync up
         mutationRateSlider = GetNode<Range>("./Settings Menu/Panel/Mutation Rate Slider");
         mutationRateBox = GetNode<Range>("./Settings Menu/Panel/Mutation Rate Box");
         mutationRateSlider.ValueChanged += (double value) => {
@@ -208,12 +209,20 @@ public partial class UI : Control
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-        currentTick_Label.Text = "Tick: " + GA.ticksThisGeneration.ToString();
-        currentGeneration_Label.Text = "Gen: " + GA.generation.ToString();
-        lastBestFitness_Label.Text = "Best Fitness: " + MathF.Round(GA.bestFitness, 3).ToString();
-        lastLargestDiff_Label.Text = "Largest Diff.: " + GA.largestDifference.ToString();
+        // Update the top bar every frame we need to
+        if (GA.GetCurrentState() == GeneticAlgorithm.State.SIMULATING)
+        {
+            currentTick_Label.Text = "Tick: " + GA.ticksThisGeneration.ToString();
+            currentGeneration_Label.Text = "Gen: " + GA.generation.ToString();
+            lastBestFitness_Label.Text = "Best Fitness: " + MathF.Round(GA.bestFitness, 3).ToString();
+            lastLargestDiff_Label.Text = "Largest Diff.: " + GA.largestDifference.ToString();
+        }
 	}
 
+    /// <summary>
+    /// Called from the ClickableFishPart, opens the fish overview with the fish passed in. 
+    /// </summary>
+    /// <param name="fishToShow">Fish details to show</param>
     public void ShowFishOverview(Fish fishToShow)
     {
         fishOnOverview = fishToShow;

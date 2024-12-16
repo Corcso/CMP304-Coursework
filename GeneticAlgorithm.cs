@@ -4,15 +4,20 @@ using System.Collections.Generic;
 
 public partial class GeneticAlgorithm : Node
 {
+    // Fish "prefab" "node scene" to spawn
 	[Export] PackedScene FishTemplate;
 
+    // Array of fish this generation, and fish to use to create the next generation. 
 	public Fish[] thisGeneration;
-    ulong[] toCreateNextGeneration;
-	public int generation = 1;
+    ulong[] toCreateNextGeneration; // Just chromosomes as thats all we need
+	public int generation = 1; // The number of generation we are on. 
 
+    // Random number generator, used throughout
 	RandomNumberGenerator rng;
 
+    // Square Generation Size parameter
 	[Export] public int squareGenerationSize;
+    // Mutation % parameter
 	[Export] public float mutationPercentage;
 
     // Define fitness function in use and all the available ones
@@ -40,12 +45,14 @@ public partial class GeneticAlgorithm : Node
     public Func<ulong, ulong> HexadecBitFlip;
     public Func<ulong, ulong> CompleteRandom;
 
-
-    [Export] int renderEveryXTicks = 60;
+    // Render every X ticks
+    [Export] int renderEveryXTicks = 100;
+    // Ticks per generation
     [Export] public int maxTicks = 5000;
+    // Ticks so far this generation
 	public int ticksThisGeneration = 0;
 
-
+    // State for storing current simulation state
 	public enum State { PRE_SIM, SIMULATING, PAUSED};
 	State currentState;
 
@@ -76,6 +83,8 @@ public partial class GeneticAlgorithm : Node
     public override void _Ready()
 	{
 		//DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
+
+        // Set physics ticks
 		Engine.PhysicsTicksPerSecond = 60;
 
 		
@@ -266,11 +275,16 @@ public partial class GeneticAlgorithm : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+        // Only do stuff if we are simulating
 		if(currentState != State.SIMULATING) return;
+        // If this generation is over
 		if (ticksThisGeneration > maxTicks) {
+            // Spawn the new generation
             NewGeneration();
+            // Reset tick counter
             ticksThisGeneration = 0;
 
+            // If generation cap is active, and we have just done the last generation. Restart the entire simulation. 
             if (generationCapActive && generation >= generationCap)
             {
                 End();
@@ -278,19 +292,24 @@ public partial class GeneticAlgorithm : Node
                 return;
             }
 
+            // Increase the generation counter
             generation++;
 		}
 
+        // If its time to render, render.
 		if(ticksThisGeneration % renderEveryXTicks == 0) { RenderingServer.RenderLoopEnabled = true; }
 		if(ticksThisGeneration % renderEveryXTicks == 1) { RenderingServer.RenderLoopEnabled = false; }
 
+        // Increase ticks this generation.
         ticksThisGeneration++;
 	}
 
 	
-
+    /// <summary>
+    /// Select the top fish for the reproduction of the next generation 
+    /// </summary>
 	public void PickEvolvedFish() {
-		//GD.Print(thisGeneration[0].GetGene());
+		// Sort the array using the inbuilt sort algorithm.
 		Array.Sort(thisGeneration, Comparer<Fish>.Create((Fish f1, Fish f2) => { 
 			return (FitnessFunction(f1) > FitnessFunction(f2)) ? 1 : ((FitnessFunction(f1) == FitnessFunction(f2)) ? 0 : -1); 
 		}));
@@ -310,12 +329,14 @@ public partial class GeneticAlgorithm : Node
         {
             for (int j = 0; j < squareGenerationSize * squareGenerationSize; ++j)
             {
+                // Compare all bits of the fish's gene
                 int thisDifference = 0;
                 for (int b = 0; b < 64; ++b)
                 {
                     ulong mask = (ulong)0x1 << b;
-                    if ((mask & (thisGeneration[i].GetGene() ^ thisGeneration[j].GetGene())) > 0) thisDifference++;
+                    if ((mask & (thisGeneration[i].GetChromosome() ^ thisGeneration[j].GetChromosome())) > 0) thisDifference++;
                 }
+                // If this fish has a larger difference it is the largest difference so far. 
                 if (thisDifference > largestDifference)
                 {
                     largestDifference = thisDifference;
@@ -323,12 +344,13 @@ public partial class GeneticAlgorithm : Node
             }
         }
 
+        // Grab the top fish for the next generation
         for (int i = 0; i < squareGenerationSize; i++)
         {
-			toCreateNextGeneration[i] = thisGeneration[i + (squareGenerationSize * squareGenerationSize) - squareGenerationSize].GetGene();
-			//GD.Print(toCreateNextGeneration[i].Position.X);
+			toCreateNextGeneration[i] = thisGeneration[i + (squareGenerationSize * squareGenerationSize) - squareGenerationSize].GetChromosome();
         }
 
+        // Reset all fish and set them to not alive. 
         for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
 			thisGeneration[i].alive = false;
@@ -336,27 +358,39 @@ public partial class GeneticAlgorithm : Node
         }
     }
 
+    /// <summary>
+    /// Create and load the next set of chromosomes. 
+    /// </summary>
 	public void CreateNewPopulation()
 	{
+        // For every possible pair of parents
 		for (int i = 0; i < squareGenerationSize; i++)
 		{
             for (int j = 0; j < squareGenerationSize; j++)
             {
+                // If the same fish, then just load this fish into the next pool, this means the chosen repopulation fish from last generation go into the next. 
 				if (i == j)
 				{
-					thisGeneration[i * squareGenerationSize + j].LoadGene(toCreateNextGeneration[i]);
+					thisGeneration[i * squareGenerationSize + j].LoadChromosome(toCreateNextGeneration[i]);
 				}
+                // Otherwise we need to recombine these 2 parents, and possibly mutate
 				else {
-					ulong childGene = RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j]);
-					float mutationRoll = rng.Randf();
-                    if(mutationRoll < mutationPercentage) thisGeneration[i * squareGenerationSize + j].LoadGene(MutationFunction(childGene));
-                    else thisGeneration[i * squareGenerationSize + j].LoadGene(childGene);
+                    // Use the recombination function to recombine the 2 fish.
+					ulong childChromosome = RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j]);
+					// If we need to mutate, use the mutation function before setting the chromosome. Otherwise just use the recombined chromosome. 
+                    float mutationRoll = rng.Randf();
+                    if(mutationRoll < mutationPercentage) thisGeneration[i * squareGenerationSize + j].LoadChromosome(MutationFunction(childChromosome));
+                    else thisGeneration[i * squareGenerationSize + j].LoadChromosome(childChromosome);
                     //RecombinationFunction(toCreateNextGeneration[i], toCreateNextGeneration[j], thisGeneration[i * 20 + j]);
                 }
 			}
         }
     }
 
+
+    /// <summary>
+    /// Summon the new fish in the game world with correct parameters. 
+    /// </summary>
 	public void SpawnNewPopulation() {
         for (int i = 0; i < squareGenerationSize * squareGenerationSize; i++)
         {
@@ -370,22 +404,34 @@ public partial class GeneticAlgorithm : Node
         }
     }
 
+    /// <summary>
+    /// Call all functions required when a new generation is needed. 
+    /// </summary>
 	public void NewGeneration() {
 		PickEvolvedFish();
-        //thisGeneration = new Fish[400];
+
         CreateNewPopulation();
+
 		SpawnNewPopulation();
+
         SummonNewRocks();
+
         OutputStatistics();
     }
 
+    /// <summary>
+    /// Start the simulation.
+    /// </summary>
 	public void Start()
 	{
+        // Set state
         currentState = State.SIMULATING;
 
+        // Create arrays
         thisGeneration = new Fish[squareGenerationSize * squareGenerationSize];
         toCreateNextGeneration = new ulong[squareGenerationSize];
 
+        // Create a random simulation ID for output
         simulationID = (ulong)rng.Randi() << 32 | (ulong)rng.Randi();
 
         // Summon initial generation
@@ -398,6 +444,7 @@ public partial class GeneticAlgorithm : Node
             GetNode<Node>("../Fish Tank").AddChild(thisGeneration[i]);
         }
 
+        // Set generation to 0, ticks to 0 and summon rocks. 
         generation = 0;
         ticksThisGeneration = 0;
         SummonNewRocks();
@@ -405,20 +452,29 @@ public partial class GeneticAlgorithm : Node
 
     }
 
+    /// <summary>
+    /// Pause the simulation
+    /// </summary>
 	public void Pause() 
 	{
 		currentState = State.PAUSED;
-
+        // Turn rendering back on 
         RenderingServer.RenderLoopEnabled = true;
     }
 
+    /// <summary>
+    /// Resume the simulation
+    /// </summary>
     public void Unpause()
     {
         currentState = State.SIMULATING;
-
+        // Turn rendering back on 
         RenderingServer.RenderLoopEnabled = false;
     }
 
+    /// <summary>
+    /// End the simulation and go back to the pre simulation settings. 
+    /// </summary>
     public void End()
     {
         currentState = State.PRE_SIM;
@@ -429,7 +485,7 @@ public partial class GeneticAlgorithm : Node
 			thisGeneration[i].QueueFree();
 			thisGeneration[i] = null;
         }
-
+        // Turn rendering back on 
         RenderingServer.RenderLoopEnabled = true;
 
         
@@ -442,31 +498,39 @@ public partial class GeneticAlgorithm : Node
     // Function called at the end of each generation to output statistics to a file.
     private void OutputStatistics() {
         FileAccess file = null;
-        // Wait until file is free
+        // Wait until file is free, allows multithread access. Please note if there is critical errors the program may hang here. 
         while (file == null || !file.IsOpen())
         {
             if (!FileAccess.FileExists("res://../run.csv"))
             {
                 file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.Write);
+                // If first write, add column headers
                 file.StoreLine("Simulation ID,Generation,Best Fitness,Average Fitness,Largest Chromosome Difference,Mutation Rate,Mutation Function,Recombination Function,Fitness Function,Generatation Size,Generation Length,Rock Radius,Rock Density,Drag Factor,Strength Multiplier");
             }
             else file = FileAccess.Open("res://../run.csv", FileAccess.ModeFlags.ReadWrite);
         }
+        // Go to the end and add this generation as a line. 
         file.SeekEnd(0);
         file.StoreLine(
             simulationID.ToString("X") + "," +
             generation.ToString() + "," + bestFitness.ToString() + "," + avgFitness.ToString() + "," + largestDifference.ToString() + "," +
             mutationPercentage.ToString() + "," +mutationFunctionName + "," + recombinationFunctionName + "," + fitnessFunctionName + "," + squareGenerationSize * squareGenerationSize + "," + maxTicks.ToString() + "," +
             rockRadius.ToString() + "," + rockDensity.ToString() + "," + dragFactor.ToString() + "," + strengthMultiplier.ToString() );
+        // Close the file
         file.Close();
     }
-
+    /// <summary>
+    /// Summon a new random set of rocks
+    /// </summary>
     private void SummonNewRocks() {
+        // Delete all the old ones
         foreach (Node rock in GetNode<Node>("../Rocks").GetChildren())
         {
             rock.Free();
         }
+        // For the number of rocks to be created. 
         for (int i = 0; i < rockDensity * rockRadius; ++i) {
+            // Create a new rock.
             Node2D newRock = rockScene.Instantiate<Node2D>();
             GetNode<Node>("../Rocks").AddChild(newRock);
             // Generate random position for rock outside the safe zone

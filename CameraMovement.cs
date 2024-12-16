@@ -3,6 +3,7 @@ using System;
 
 public partial class CameraMovement : Camera2D
 {
+    // For moving UI with camera
     Control UI;
 
 	// Called when the node enters the scene tree for the first time.

@@ -3,7 +3,7 @@ using System;
 
 public partial class ClickableFishPart : Area2D
 {
-
+    // UI reference
     UI uiScript;
 
 	// Called when the node enters the scene tree for the first time.
@@ -19,6 +19,7 @@ public partial class ClickableFishPart : Area2D
 
     public override void _InputEvent(Viewport viewport, InputEvent @event, int shapeIdx)
     {
+        // If we clock on the fish collider. Open the fish overview for this fish. 
         base._InputEvent(viewport, @event, shapeIdx);
 
         if (@event is InputEventMouseButton mouseEvent)
